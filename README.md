@@ -1,3 +1,3 @@
 # Othello
 
-Othello game with Artificial Intelligence
+Othello game with Artificial Intelligence.
