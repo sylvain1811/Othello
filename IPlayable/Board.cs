@@ -10,7 +10,8 @@ namespace Othello_G3
     {
 
         // ATTRIBUTS
-        int[,] board;
+        private int[,] board;
+        private static string NAME = "Costa_Renaud";
 
         // CONSTRUCTEUR
         public Board()
@@ -24,8 +25,8 @@ namespace Othello_G3
                     board[i, j] = -1;
                 }
             }
-            board[3, 3] = board[4, 4] = 0;
-            board[4, 3] = board[3, 4] = 1;
+            board[3, 3] = board[4, 4] = 0; // White
+            board[4, 3] = board[3, 4] = 1; // Black
         }
 
         // IMPLEMENTS
@@ -52,7 +53,8 @@ namespace Othello_G3
 
         public string GetName()
         {
-            throw new NotImplementedException();
+            // throw new NotImplementedException();
+            return NAME;
         }
 
         public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)
@@ -77,7 +79,12 @@ namespace Othello_G3
 
         public bool IsPlayable(int column, int line, bool isWhite)
         {
-            throw new NotImplementedException();
+            // throw new NotImplementedException();
+            if (board[column, line] > -1)
+            {
+                return false;
+            }
+            return true;
         }
 
         public bool PlayMove(int column, int line, bool isWhite)
