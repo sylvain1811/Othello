@@ -23,6 +23,19 @@ namespace Othello
         public MainWindow()
         {
             InitializeComponent();
+            int x = 0;
+            foreach (ColumnDefinition col in gridBoard.ColumnDefinitions.ToList())
+            {
+                Button btn = new Button
+                {
+                    Content = "salut " + x,
+
+                };
+                Console.WriteLine(x);
+                gridBoard.Children.Add(btn);
+
+                x++;
+            }
         }
     }
 }
