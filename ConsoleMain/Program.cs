@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Othello_G3;
+using OthelloIA_G3;
 
 namespace IPlayable
 {

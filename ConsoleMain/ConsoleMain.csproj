@@ -49,10 +49,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IPlayable\Othello_G3.csproj">
-      <Project>{ba3ee494-56e3-470e-aacf-cb0577be0eb6}</Project>
-      <Name>Othello_G3</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Othello\Othello.csproj">
       <Project>{db300397-a5f1-4cc1-81fa-cde24df1569d}</Project>
       <Name>Othello</Name>

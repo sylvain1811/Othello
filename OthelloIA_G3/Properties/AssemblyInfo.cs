@@ -2,34 +2,34 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-// Les informations générales relatives à un assembly dépendent de 
+// Les informations générales relatives à un assembly dépendent de
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("IPlayable")]
+[assembly: AssemblyTitle("Othello_G3")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("IPlayable")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyProduct("Othello_G3")]
+[assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-// L'affectation de la valeur false à ComVisible rend les types invisibles dans cet assembly 
-// aux composants COM.  Si vous devez accéder à un type dans cet assembly à partir de 
+// L'affectation de la valeur false à ComVisible rend les types invisibles dans cet assembly
+// aux composants COM. Si vous devez accéder à un type dans cet assembly à partir de
 // COM, affectez la valeur true à l'attribut ComVisible sur ce type.
 [assembly: ComVisible(false)]
 
 // Le GUID suivant est pour l'ID de la typelib si ce projet est exposé à COM
-[assembly: Guid("ba3ee494-56e3-470e-aacf-cb0577be0eb6")]
+[assembly: Guid("90c344fa-02b9-4077-9f02-0cb7f6748d54")]
 
 // Les informations de version pour un assembly se composent des quatre valeurs suivantes :
 //
 //      Version principale
-//      Version secondaire 
+//      Version secondaire
 //      Numéro de build
 //      Révision
 //
-// Vous pouvez spécifier toutes les valeurs ou indiquer les numéros de build et de révision par défaut 
+// Vous pouvez spécifier toutes les valeurs ou indiquer les numéros de build et de révision par défaut
 // en utilisant '*', comme indiqué ci-dessous :
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
