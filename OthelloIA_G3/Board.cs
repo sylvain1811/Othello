@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IPlayable;
 
 namespace OthelloIA_G3
 {
@@ -18,7 +14,7 @@ namespace OthelloIA_G3
         public Board()
         {
             // Init board
-            this.board = new int[8, 8];
+            board = new int[8, 8];
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
@@ -48,24 +44,22 @@ namespace OthelloIA_G3
 
         public int[,] GetBoard()
         {
-            // throw new NotImplementedException();
             return board;
         }
 
         public string GetName()
         {
-            // throw new NotImplementedException();
             return NAME;
         }
 
         public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)
         {
+            // TODO Choisir le meilleur move avec un algo
             throw new NotImplementedException();
         }
 
         public int GetWhiteScore()
         {
-            // throw new NotImplementedException();
             int score = 0;
             foreach (int i in board)
             {
@@ -80,27 +74,41 @@ namespace OthelloIA_G3
 
         public bool IsPlayable(int column, int line, bool isWhite)
         {
+            return CheckOrPlay(column, line, isWhite, true);
+        }
+
+        public bool PlayMove(int column, int line, bool isWhite)
+        {
+            return CheckOrPlay(column, line, isWhite, false);
+        }
+
+        // PRIVATE
+        private bool CheckOrPlay(int column, int line, bool isWhite, bool checkOnly)
+        {
             // Check case is empty
             if (board[column, line] > -1)
             {
                 return false;
             }
 
+            bool playable = false;
+
             // Check voisin d'autre couleurs
-            int colorVoisinAttendue;
+            int colorOpponent;
             int myColor;
             if (isWhite == true)
             {
-                colorVoisinAttendue = 1;
+                colorOpponent = 1;
                 myColor = 0;
             }
             else
             {
+                colorOpponent = 0;
                 myColor = 1;
-                colorVoisinAttendue = 0;
             }
 
             //  (c; l) 
+            //  -----------------------
             //  (-1;-1)  (0;-1)  (1;-1)
             //  (-1; 0)  (0; 0)  (1; 0)
             //  (-1; 1)  (0; 1)  (1; 1)
@@ -131,6 +139,7 @@ namespace OthelloIA_G3
                 lend = 1;
 
             //Console.WriteLine($"lstart : {lstart}\nlend : {lend}\ncstart : {cstart}\ncend : {cend}");
+
             // Parcours des voisins
             for (int c = cstart; c <= cend; c++)
             {
@@ -139,18 +148,50 @@ namespace OthelloIA_G3
                     // Check seulement si la case n'est pas nous-même
                     if (!(c == 0 && l == 0))
                     {
-                        if (board[column + c, line + l] == colorVoisinAttendue)
+                        if (board[column + c, line + l] == colorOpponent)
                         {
-                            // Check si il y a un pion de notre couleur dans cette ligne/col/diagonale
+                            // Check si il y a un pion de notre couleur dans cette ligne/colonne/diagonale
+
+                            List<Tuple<int, int>> opponentPion = new List<Tuple<int, int>>
+                            {
+                                new Tuple<int, int>(column + c, line + l)
+                            };
+
+                            // Console.WriteLine($"Color ({column + c};{line + l}): " + board[column + c, line + l]);
 
                             int copyC = c + c; // c dans [-1;1]
                             int copyL = l + l; // l dans [-1;1]
 
                             while (column + copyC <= 7 && line + copyL <= 7 && column + copyC >= 0 && line + copyL >= 0)
                             {
-                                //Console.WriteLine("copyC : " + copyC + " copyL : " + copyL);
-                                if (board[column + copyC, line + copyL] == myColor)
-                                    return true;
+                                int currentCell = board[column + copyC, line + copyL];
+                                if (currentCell == myColor)
+                                {
+                                    // Un pion a moi
+                                    if (checkOnly)
+                                    {
+                                        return true;
+                                    }
+                                    else
+                                    {
+                                        playable = true;
+                                        foreach (var tuple in opponentPion)
+                                        {
+                                            board[tuple.Item1, tuple.Item2] = myColor;
+                                        }
+                                    }
+                                }
+                                else if (currentCell < 0)
+                                {
+                                    // Cellule vide
+                                    break;
+                                }
+
+                                else if (currentCell == colorOpponent)
+                                {
+                                    // Pion adversaire
+                                    opponentPion.Add(new Tuple<int, int>(column + copyC, line + copyL));
+                                }
 
                                 // Déplacement dans la continuité
                                 copyC += c;
@@ -160,12 +201,12 @@ namespace OthelloIA_G3
                     }
                 }
             }
+            if (!checkOnly && playable)
+            {
+                board[column, line] = myColor;
+                return true;
+            }
             return false;
-        }
-
-        public bool PlayMove(int column, int line, bool isWhite)
-        {
-            throw new NotImplementedException();
         }
     }
 }
