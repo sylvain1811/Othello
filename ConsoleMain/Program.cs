@@ -12,11 +12,11 @@ namespace IPlayable
         static void Main(string[] args)
         {
             Board board = new Board();
-            board.GetBlackScore();
-            board.GetWhiteScore();
-            Console.WriteLine(board.IsPlayable(3, 2, false));
+            //board.GetBlackScore();
+            //board.GetWhiteScore();
+            Console.WriteLine(board.IsPlayable(4, 5, false));
             Console.ReadKey();
-            
+
         }
     }
 }

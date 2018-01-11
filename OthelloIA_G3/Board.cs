@@ -87,17 +87,17 @@ namespace OthelloIA_G3
             }
 
             // Check voisin d'autre couleurs
-            int colorVoisin;
+            int colorVoisinAttendue;
             int myColor;
             if (isWhite == true)
             {
-                colorVoisin = 1;
+                colorVoisinAttendue = 1;
                 myColor = 0;
             }
             else
             {
                 myColor = 1;
-                colorVoisin = 0;
+                colorVoisinAttendue = 0;
             }
 
             //  (c; l) 
@@ -130,30 +130,31 @@ namespace OthelloIA_G3
             else
                 lend = 1;
 
+            //Console.WriteLine($"lstart : {lstart}\nlend : {lend}\ncstart : {cstart}\ncend : {cend}");
             // Parcours des voisins
-            for (int c = cstart; c == cend; c++)
+            for (int c = cstart; c <= cend; c++)
             {
-                for (int l = lstart; l == lend; l++)
+                for (int l = lstart; l <= lend; l++)
                 {
                     // Check seulement si la case n'est pas nous-même
                     if (!(c == 0 && l == 0))
                     {
-                        if (column <= 0)
+                        if (board[column + c, line + l] == colorVoisinAttendue)
                         {
-                            if (board[column + c, line + l] == colorVoisin)
+                            // Check si il y a un pion de notre couleur dans cette ligne/col/diagonale
+
+                            int copyC = c + c; // c dans [-1;1]
+                            int copyL = l + l; // l dans [-1;1]
+
+                            while (column + copyC <= 7 && line + copyL <= 7 && column + copyC >= 0 && line + copyL >= 0)
                             {
-                                // Check si il y a un pion de notre couleur dans cette ligne/col/diagonale
-                                int copyC = c; // [-1;1]
-                                int copyL = l; // [-1;1]
+                                //Console.WriteLine("copyC : " + copyC + " copyL : " + copyL);
+                                if (board[column + copyC, line + copyL] == myColor)
+                                    return true;
 
-                                while (copyC <= 7 && copyL <= 7 && copyC >= 0 && copyL >= 0)
-                                {
-                                    copyC += copyC;
-                                    copyL += copyL;
-
-                                    if (board[column + copyC, line + copyL] == myColor)
-                                        return true;
-                                }
+                                // Déplacement dans la continuité
+                                copyC += c;
+                                copyL += l;
                             }
                         }
                     }
