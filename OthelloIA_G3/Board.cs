@@ -143,36 +143,23 @@ namespace OthelloIA_G3
                             if (board[column + c, line + l] == colorVoisin)
                             {
                                 // Check si il y a un pion de notre couleur dans cette ligne/col/diagonale
-                                int copyC = c;
-                                int copyL = l;
+                                int copyC = c; // [-1;1]
+                                int copyL = l; // [-1;1]
 
+                                while (copyC <= 7 && copyL <= 7 && copyC >= 0 && copyL >= 0)
+                                {
+                                    copyC += copyC;
+                                    copyL += copyL;
 
+                                    if (board[column + copyC, line + copyL] == myColor)
+                                        return true;
+                                }
                             }
                         }
                     }
                 }
             }
-
-            if (column > 0 && line > 0)
-            {
-                bool a = board[column - 1, line - 1] == colorVoisin;
-            }
-
-            if (board[column - 1, line - 1] == colorVoisin ||
-            board[column - 1, line] == colorVoisin ||
-            board[column - 1, line + 1] == colorVoisin ||
-            board[column, line - 1] == colorVoisin ||
-            board[column, line + 1] == colorVoisin ||
-            board[column + 1, line - 1] == colorVoisin ||
-            board[column + 1, line] == colorVoisin ||
-            board[column + 1, line + 1] == colorVoisin)
-            {
-                // Il y a au moins un voisin de la bonne couleur
-            }
-
-            // Check meme couleur sur meme ligne, col, diagonale
-
-            return true;
+            return false;
         }
 
         public bool PlayMove(int column, int line, bool isWhite)

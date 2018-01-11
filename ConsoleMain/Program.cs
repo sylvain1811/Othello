@@ -14,8 +14,9 @@ namespace IPlayable
             Board board = new Board();
             board.GetBlackScore();
             board.GetWhiteScore();
-
+            Console.WriteLine(board.IsPlayable(3, 2, false));
             Console.ReadKey();
+            
         }
     }
 }

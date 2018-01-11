@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Othello", "Othello\Othello.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleMain", "ConsoleMain\ConsoleMain.csproj", "{3901E8C2-234C-4402-B014-5B45131D95AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OthelloIA_G3", "Othello_G3\OthelloIA_G3.csproj", "{90C344FA-02B9-4077-9F02-0CB7F6748D54}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OthelloIA_G3", "OthelloIA_G3\OthelloIA_G3.csproj", "{90C344FA-02B9-4077-9F02-0CB7F6748D54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
