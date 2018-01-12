@@ -5,16 +5,18 @@ namespace OthelloIA_G3
 {
     public class Board : IPlayable.IPlayable
     {
-
         // ATTRIBUTS
         private int[,] board;
         private static string NAME = "Costa_Renaud";
-        private int color;
+        private Tuple<int, int> bestOp = null;
 
-        // CONSTRUCTEUR
-        public Board(int color)
+        // CONSTRUCTEURS
+
+        /// <summary>
+        /// Construcuteur sans paramètres.
+        /// </summary>
+        public Board()
         {
-            this.color = color;
             // Init board
             board = new int[8, 8];
             for (int i = 0; i < 8; i++)
@@ -30,10 +32,8 @@ namespace OthelloIA_G3
             board[4, 3] = board[3, 4] = 1; // Black
         }
 
-        public Board(Board source)
+        public Board(int[,] game)
         {
-            color = source.color;
-
             // Init board
             board = new int[8, 8];
 
@@ -42,13 +42,41 @@ namespace OthelloIA_G3
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    board[i, j] = source.board[i, j];
+                    board[i, j] = game[i, j];
                 }
             }
-
         }
 
+        /// <summary>
+        /// Constructeur de copie.
+        /// </summary>
+        /// <param name="source"></param>
+        public Board(Board source) : this(source.GetBoard()) { }
+
         // IMPLEMENTS
+
+        /// <summary>
+        /// Retourne le nom de l'IA.
+        /// </summary>
+        /// <returns></returns>
+        public string GetName()
+        {
+            return NAME;
+        }
+
+        /// <summary>
+        /// Retourne le tableau de int représentant le board.
+        /// </summary>
+        /// <returns></returns>
+        public int[,] GetBoard()
+        {
+            return board;
+        }
+
+        /// <summary>
+        /// Calcul le score des pions noir.
+        /// </summary>
+        /// <returns></returns>
         public int GetBlackScore()
         {
             int score = 0;
@@ -61,27 +89,10 @@ namespace OthelloIA_G3
             return score;
         }
 
-        public int[,] GetBoard()
-        {
-            return board;
-        }
-
-        public string GetName()
-        {
-            return NAME;
-        }
-
-        public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)
-        {
-            // TODO Choisir le meilleur move avec un algo
-            int myColor = whiteTurn ? 0 : 1;
-
-            TreeNode root = new TreeNode(this, TreeNode.EType.MAX, myColor);
-
-            // AlphaBeta(root, level, minOrMax, parentValue);
-            throw new NotImplementedException();
-        }
-
+        /// <summary>
+        /// Calcul le score des pions blancs.
+        /// </summary>
+        /// <returns></returns>
         public int GetWhiteScore()
         {
             int score = 0;
@@ -94,17 +105,61 @@ namespace OthelloIA_G3
             return score;
         }
 
+        /// <summary>
+        /// Retourne le prochain coup que l'IA va jouer.
+        /// </summary>
+        /// <param name="game">game board</param>
+        /// <param name="level">niveau de profondeur</param>
+        /// <param name="whiteTurn">qui joue ?</param>
+        /// <returns></returns>
+        public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)
+        {
+            bestOp = null;
+            int myColor = whiteTurn ? 0 : 1;
+            int myScore = whiteTurn ? GetWhiteScore() : GetBlackScore();
+
+            TreeNode root = new TreeNode(this, TreeNode.EType.MAX, myColor);
+
+            int val = AlphaBeta(root, level, whiteTurn, (int)TreeNode.EType.MAX, myScore);
+            // PrintBoard(board);
+            return bestOp;
+        }
+
+        /// <summary>
+        /// Retourne si oui ou non un coup est jouable par un joueur d'une certaine couleur.
+        /// </summary>
+        /// <param name="column"></param>
+        /// <param name="line"></param>
+        /// <param name="isWhite">couleur du pion</param>
+        /// <returns></returns>
         public bool IsPlayable(int column, int line, bool isWhite)
         {
             return CheckOrPlay(column, line, isWhite, true);
         }
 
+        /// <summary>
+        /// Joue un coup et met à jour le plateau de jeu.
+        /// </summary>
+        /// <param name="column"></param>
+        /// <param name="line"></param>
+        /// <param name="isWhite"></param>
+        /// <returns></returns>
         public bool PlayMove(int column, int line, bool isWhite)
         {
             return CheckOrPlay(column, line, isWhite, false);
         }
 
         // PRIVATE
+
+        /// <summary>
+        /// Méthode générique appelée par IsPlayable et PlayMove.
+        /// </summary>
+        /// <param name="column"></param>
+        /// <param name="line"></param>
+        /// <param name="isWhite"></param>
+        /// <param name="checkOnly">True si l'on veut juste vérifier qu'un coup est jouable. 
+        /// False si on veut jouer le coup et mettre à jour le plateau.</param>
+        /// <returns></returns>
         private bool CheckOrPlay(int column, int line, bool isWhite, bool checkOnly)
         {
             // Check case is empty
@@ -210,6 +265,56 @@ namespace OthelloIA_G3
                 return true;
             }
             return false;
+        }
+        private int AlphaBeta(TreeNode root, int level, bool isWhite, int minOrMax, int parentValue)
+        {
+            if (level == 0 || root.Final())
+            {
+                bestOp = null;
+                return root.Eval();
+            }
+
+            int optVal = minOrMax * -int.MaxValue;
+            bestOp = null;
+
+            foreach (var op in root.Ops(isWhite))
+            {
+                TreeNode newTree = root.Apply(op.Item1, op.Item2, isWhite);
+                int val = AlphaBeta(newTree, level - 1, !isWhite, -minOrMax, optVal);
+                if (val * minOrMax > optVal * minOrMax)
+                {
+                    optVal = val;
+                    bestOp = op;
+
+                    if (optVal * minOrMax > parentValue * minOrMax)
+                        break;
+                }
+            }
+            if (bestOp == null)
+            {
+                bestOp = new Tuple<int, int>(-1, -1);
+            }
+            return optVal;
+        }
+        public static void PrintBoard(int[,] board)
+        {
+            Console.WriteLine("===============================================================================");
+            Console.WriteLine("NEW BOARD");
+            Console.WriteLine("===============================================================================");
+            Console.WriteLine("----------------------------------------------------------------");
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    if (board[j, i] == -1)
+
+                        Console.Write("       |");
+                    else
+
+                        Console.Write("   " + board[j, i] + "   |");
+                }
+                Console.WriteLine("\n----------------------------------------------------------------");
+            }
         }
     }
 }

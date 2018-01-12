@@ -8,7 +8,7 @@ namespace OthelloIA_G3
 {
     class TreeNode
     {
-        public enum EType { MIN, MAX, LEAF };
+        public enum EType { MIN = -1, MAX = 1 };
 
         // Attributs
 
@@ -20,7 +20,7 @@ namespace OthelloIA_G3
 
         public TreeNode(Board board, EType type, int myColor)
         {
-            this.board = board;
+            this.board = new Board(board);
             Type = type;
             this.myColor = myColor;
         }
@@ -29,18 +29,21 @@ namespace OthelloIA_G3
         {
             if (myColor == 0)
             {
-                if (Type == EType.MAX)
+                return board.GetWhiteScore();
+                /*if (Type == EType.MAX)
                     // On veut connaitre le meilleur coup des blancs si on est blanc
                     return board.GetWhiteScore();
                 else
                     return board.GetBlackScore();
+                    */
             }
             else
             {
-                if (Type == EType.MAX)
+                return board.GetBlackScore();
+                /*if (Type == EType.MAX)
                     return board.GetBlackScore();
                 else
-                    return board.GetWhiteScore();
+                    return board.GetWhiteScore();*/
             }
         }
 
@@ -97,7 +100,7 @@ namespace OthelloIA_G3
             else
                 newType = EType.MAX;
 
-            return new TreeNode(newBoard, newType, myColor); ;
+            return new TreeNode(newBoard, newType, myColor == 0 ? 1 : 0);
         }
     }
 }
