@@ -1,5 +1,4 @@
 ﻿using System;
-using OthelloIA_G3;
 
 namespace OthelloIA_G3
 {
@@ -13,62 +12,79 @@ namespace OthelloIA_G3
         {
             Board boardWhite = new Board();
             Board boardBlack = new Board();
+            Board boardArbitre = new Board();
 
-            PrintBoard(boardWhite.GetBoard(), false);
-
-            while (true)
+            bool finished = false;
+            bool whiteTurn = false;
+            while (!finished)
             {
-                var moveBlack = boardBlack.GetNextMove(boardBlack.GetBoard(), 4, false);
-                if (boardBlack.IsPlayable(moveBlack.Item1, moveBlack.Item2, false))
+                Board turnBoard = whiteTurn ? boardWhite : boardBlack;
+
+                var move = turnBoard.GetNextMove(boardArbitre.GetBoard(), 4, whiteTurn);
+
+                if (move.Item1 == -1 && move.Item2 == -1)
                 {
-                    boardBlack.PlayMove(moveBlack.Item1, moveBlack.Item2, false);
-                    boardWhite.PlayMove(moveBlack.Item1, moveBlack.Item2, false);
+                    PrintPass(whiteTurn);
                 }
                 else
                 {
-                    PrintError(moveBlack, false);
-                    break;
+                    if (boardArbitre.IsPlayable(move.Item1, move.Item2, whiteTurn))
+                    {
+                        boardArbitre.PlayMove(move.Item1, move.Item2, whiteTurn);
+                        boardBlack.PlayMove(move.Item1, move.Item2, whiteTurn);
+                        boardWhite.PlayMove(move.Item1, move.Item2, whiteTurn);
+                    }
+                    else
+                    {
+                        PrintError(move, whiteTurn);
+                        break;
+                    }
+                    PrintBoard(boardArbitre.GetBoard(), whiteTurn, move.Item1, move.Item2);
                 }
+                whiteTurn = !whiteTurn;
 
-                PrintBoard(boardBlack.GetBoard(), false);
+                finished = boardArbitre.IsFinished();
 
-                Console.ReadKey();
-
-                var moveWhite = boardWhite.GetNextMove(boardWhite.GetBoard(), 4, true);
-                if (boardWhite.IsPlayable(moveWhite.Item1, moveWhite.Item2, true))
-                {
-                    boardWhite.PlayMove(moveWhite.Item1, moveWhite.Item2, true);
-                    boardBlack.PlayMove(moveWhite.Item1, moveWhite.Item2, true);
-                }
-                else
-                {
-                    PrintError(moveWhite, true);
-                    break;
-                }
-                PrintBoard(boardWhite.GetBoard(), true);
-
-                Console.ReadKey();
+                //Console.ReadKey();
             }
+            PrintFinish(boardArbitre);
             Console.ReadKey();
         }
 
         static void PrintError(Tuple<int, int> tuple, bool isWhite)
         {
             string turn = isWhite ? WHITE : BLACK;
-            Console.WriteLine("===============================================================================");
+            Console.WriteLine(TITLE);
             Console.WriteLine($"ARBITRE - Coup invalide {turn} ({tuple.Item1};{tuple.Item2})");
-            Console.WriteLine("===============================================================================");
+            Console.WriteLine(TITLE);
+        }
+
+        static void PrintPass(bool isWhite)
+        {
+            string turn = isWhite ? WHITE : BLACK;
+            Console.WriteLine(TITLE);
+            Console.WriteLine($"{turn} PASS");
+            Console.WriteLine(TITLE);
+        }
+        static void PrintFinish(Board board)
+        {
+            Console.WriteLine(TITLE);
+            Console.WriteLine($"Score : {BLACK} : {board.GetBlackScore()}; {WHITE}: {board.GetWhiteScore()}");
+            Console.WriteLine(TITLE);
         }
 
         static string WHITE = "WHITE";
         static string BLACK = "BLACK";
-        public static void PrintBoard(int[,] board, bool whiteTurn)
+        static string TITLE = "===============================================================================";
+        static string BORDER = "----------------------------------------------------------------";
+        public static void PrintBoard(int[,] board, bool whiteTurn, int c, int l)
         {
             string turn = whiteTurn ? WHITE : BLACK;
-            Console.WriteLine("===============================================================================");
-            Console.WriteLine($"NEW BOARD : {turn}");
-            Console.WriteLine("===============================================================================");
-            Console.WriteLine("----------------------------------------------------------------");
+            //Console.Clear();
+            Console.WriteLine(TITLE);
+            Console.WriteLine($"NEW BOARD : {turn} ({c};{l})");
+            Console.WriteLine(TITLE);
+            Console.WriteLine(BORDER);
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
@@ -80,7 +96,7 @@ namespace OthelloIA_G3
 
                         Console.Write("   " + board[j, i] + "   |");
                 }
-                Console.WriteLine("\n----------------------------------------------------------------");
+                Console.WriteLine("\n" + BORDER);
             }
         }
     }

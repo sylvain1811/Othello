@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OthelloIA_G3
 {
@@ -12,60 +9,38 @@ namespace OthelloIA_G3
 
         // Attributs
 
-        public List<TreeNode> Children { get; set; }
+        //public List<TreeNode> Children { get; set; }
         public EType Type { get; set; }
 
         private Board board;
-        private int myColor;
+        private bool isWhite;
 
-        public TreeNode(Board board, EType type, int myColor)
+        public TreeNode(Board board, EType type, bool isWhite)
         {
             this.board = new Board(board);
             Type = type;
-            this.myColor = myColor;
+            this.isWhite = isWhite;
         }
 
         public int Eval()
         {
-            if (myColor == 0)
-            {
-                return board.GetWhiteScore();
-                /*if (Type == EType.MAX)
-                    // On veut connaitre le meilleur coup des blancs si on est blanc
-                    return board.GetWhiteScore();
-                else
-                    return board.GetBlackScore();
-                    */
-            }
-            else
-            {
-                return board.GetBlackScore();
-                /*if (Type == EType.MAX)
-                    return board.GetBlackScore();
-                else
-                    return board.GetWhiteScore();*/
-            }
+            return isWhite ? board.GetWhiteScore() : board.GetBlackScore();
         }
 
-        public bool Final()
+        public static bool Final(Board board)
         {
-            int cptPossibilite = 64;
-
             for (int c = 0; c < 8; c++)
             {
                 for (int l = 0; l < 8; l++)
                 {
                     if (board.GetBoard()[c, l] > -1)
                         // Cellule prise
-                        cptPossibilite--;
+                        continue;
                     else
                     {
                         if (board.IsPlayable(c, l, true) || board.IsPlayable(c, l, false))
                             // Un des deux joueurs peut encore jouer
                             return false;
-                        else
-                            // Personne peut jouer à cette case
-                            cptPossibilite--;
                     }
                 }
             }
@@ -73,16 +48,21 @@ namespace OthelloIA_G3
             return true;
         }
 
-        public List<Tuple<int, int>> Ops(bool isWhite)
+        public bool Final()
         {
-            var ops = new List<Tuple<int, int>>();
+            return Final(board);
+        }
+
+        public List<Cell> Ops(bool isWhite)
+        {
+            var ops = new List<Cell>();
             for (int c = 0; c < 8; c++)
             {
                 for (int l = 0; l < 8; l++)
                 {
                     if (board.IsPlayable(c, l, isWhite))
                     {
-                        ops.Add(new Tuple<int, int>(c, l));
+                        ops.Add(new Cell(c, l));
                     }
                 }
             }
@@ -100,7 +80,21 @@ namespace OthelloIA_G3
             else
                 newType = EType.MAX;
 
-            return new TreeNode(newBoard, newType, myColor == 0 ? 1 : 0);
+            return new TreeNode(newBoard, newType, this.isWhite);
+        }
+
+        public override string ToString()
+        {
+            string output = "";
+            for (int l = 0; l < 8; l++)
+            {
+                for (int c = 0; c < 8; c++)
+                {
+                    output += board.GetBoard()[c, l] + " ";
+                }
+                output += "\n";
+            }
+            return output;
         }
     }
 }

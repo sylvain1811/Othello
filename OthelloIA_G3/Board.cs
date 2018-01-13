@@ -8,7 +8,6 @@ namespace OthelloIA_G3
         // ATTRIBUTS
         private int[,] board;
         private static string NAME = "Costa_Renaud";
-        private Tuple<int, int> bestOp = null;
 
         // CONSTRUCTEURS
 
@@ -30,6 +29,11 @@ namespace OthelloIA_G3
             // Place first pions
             board[3, 3] = board[4, 4] = 0; // White
             board[4, 3] = board[3, 4] = 1; // Black
+        }
+
+        public bool IsFinished()
+        {
+            return TreeNode.Final(this);
         }
 
         public Board(int[,] game)
@@ -114,15 +118,20 @@ namespace OthelloIA_G3
         /// <returns></returns>
         public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)
         {
-            bestOp = null;
-            int myColor = whiteTurn ? 0 : 1;
             int myScore = whiteTurn ? GetWhiteScore() : GetBlackScore();
 
-            TreeNode root = new TreeNode(this, TreeNode.EType.MAX, myColor);
+            TreeNode root = new TreeNode(this, TreeNode.EType.MAX, whiteTurn);
 
-            int val = AlphaBeta(root, level, whiteTurn, (int)TreeNode.EType.MAX, myScore);
-            // PrintBoard(board);
-            return bestOp;
+            //Console.WriteLine(root.ToString());
+
+            var bestOp = AlphaBeta(root, level, whiteTurn, (int)TreeNode.EType.MAX, myScore).Item2;
+
+            if (bestOp == null)
+            {
+                bestOp = new Cell(-1, -1);
+
+            }
+            return new Tuple<int, int>(bestOp.C, bestOp.L);
         }
 
         /// <summary>
@@ -162,6 +171,7 @@ namespace OthelloIA_G3
         /// <returns></returns>
         private bool CheckOrPlay(int column, int line, bool isWhite, bool checkOnly)
         {
+            List<Pawn> toFlip = new List<Pawn>();
             // Check case is empty
             if (board[column, line] > -1)
             {
@@ -171,18 +181,8 @@ namespace OthelloIA_G3
             bool playable = false;
 
             // Check voisin d'autre couleurs
-            int colorOpponent;
-            int colorPlayer;
-            if (isWhite == true)
-            {
-                colorOpponent = 1;
-                colorPlayer = 0;
-            }
-            else
-            {
-                colorOpponent = 0;
-                colorPlayer = 1;
-            }
+            int colorOpponent = isWhite ? 1 : 0;
+            int colorPlayer = isWhite ? 0 : 1;
 
             //  (c; l) 
             //  -----------------------
@@ -210,9 +210,9 @@ namespace OthelloIA_G3
                         {
                             // Check si il y a un pion de notre couleur dans cette ligne/colonne/diagonale
 
-                            List<Tuple<int, int>> opponentPion = new List<Tuple<int, int>>
+                            List<Pawn> opponentPion = new List<Pawn>
                             {
-                                new Tuple<int, int>(column + c, line + l)
+                                new Pawn(column + c, line + l, colorOpponent)
                             };
 
                             // Console.WriteLine($"Color ({column + c};{line + l}): " + board[column + c, line + l]);
@@ -220,7 +220,8 @@ namespace OthelloIA_G3
                             int copyC = c + c; // c dans [-1;1]
                             int copyL = l + l; // l dans [-1;1]
 
-                            while (column + copyC <= 7 && line + copyL <= 7 && column + copyC >= 0 && line + copyL >= 0)
+                            //while (!playable && (column + copyC < 8 && line + copyL < 8 && column + copyC >= 0 && line + copyL >= 0))
+                            while (column + copyC < 8 && line + copyL < 8 && column + copyC >= 0 && line + copyL >= 0)
                             {
                                 int currentCell = board[column + copyC, line + copyL];
                                 if (currentCell == colorPlayer)
@@ -235,8 +236,10 @@ namespace OthelloIA_G3
                                         playable = true;
                                         foreach (var tuple in opponentPion)
                                         {
-                                            board[tuple.Item1, tuple.Item2] = colorPlayer;
+                                            //board[tuple.Item1, tuple.Item2] = colorPlayer;
+                                            toFlip.Add(tuple);
                                         }
+                                        break;
                                     }
                                 }
                                 else if (currentCell < 0)
@@ -244,11 +247,10 @@ namespace OthelloIA_G3
                                     // Cellule vide
                                     break;
                                 }
-
                                 else if (currentCell == colorOpponent)
                                 {
                                     // Pion adversaire
-                                    opponentPion.Add(new Tuple<int, int>(column + copyC, line + copyL));
+                                    opponentPion.Add(new Pawn(column + copyC, line + copyL, colorOpponent));
                                 }
 
                                 // Déplacement dans la continuité
@@ -261,60 +263,40 @@ namespace OthelloIA_G3
             }
             if (!checkOnly && playable)
             {
+                toFlip.ForEach(pawn => board[pawn.C, pawn.L] = colorPlayer);
                 board[column, line] = colorPlayer;
                 return true;
             }
             return false;
         }
-        private int AlphaBeta(TreeNode root, int level, bool isWhite, int minOrMax, int parentValue)
+        private Tuple<int, Cell> AlphaBeta(TreeNode root, int level, bool isWhite, int minOrMax, int parentValue)
         {
             if (level == 0 || root.Final())
             {
-                bestOp = null;
-                return root.Eval();
+                return Tuple.Create<int, Cell>(root.Eval(), null);
             }
 
             int optVal = minOrMax * -int.MaxValue;
-            bestOp = null;
+            Cell optOp = null;
+            var ops = root.Ops(isWhite);
 
-            foreach (var op in root.Ops(isWhite))
+            foreach (var op in ops)
             {
-                TreeNode newTree = root.Apply(op.Item1, op.Item2, isWhite);
-                int val = AlphaBeta(newTree, level - 1, !isWhite, -minOrMax, optVal);
+                TreeNode newTree = root.Apply(op.C, op.L, isWhite);
+                // int val = AlphaBeta(newTree, level - 1, !isWhite, -minOrMax, optVal).Item1;
+                int val = AlphaBeta(newTree, level - 1, !isWhite, -minOrMax, optVal).Item1;
                 if (val * minOrMax > optVal * minOrMax)
                 {
                     optVal = val;
-                    bestOp = op;
+                    optOp = op;
 
                     if (optVal * minOrMax > parentValue * minOrMax)
                         break;
                 }
             }
-            if (bestOp == null)
-            {
-                bestOp = new Tuple<int, int>(-1, -1);
-            }
-            return optVal;
-        }
-        public static void PrintBoard(int[,] board)
-        {
-            Console.WriteLine("===============================================================================");
-            Console.WriteLine("NEW BOARD");
-            Console.WriteLine("===============================================================================");
-            Console.WriteLine("----------------------------------------------------------------");
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    if (board[j, i] == -1)
-
-                        Console.Write("       |");
-                    else
-
-                        Console.Write("   " + board[j, i] + "   |");
-                }
-                Console.WriteLine("\n----------------------------------------------------------------");
-            }
+            return Tuple.Create<int, Cell>(optVal, optOp);
         }
     }
 }
+
+
