@@ -22,9 +22,15 @@ namespace OthelloIA_G3
             this.isWhite = isWhite;
         }
 
+        /// <summary>
+        /// La valeur retournée indique la différence de coups possible entre les joueurs. Si positif : noir à l'avantage.
+        /// </summary>
+        /// <returns></returns>
         public int Eval()
         {
-            return isWhite ? board.GetWhiteScore() : board.GetBlackScore();
+            int possibilityWhite = Ops(true).Count;
+            int possibilityBlack = Ops(false).Count;
+            return possibilityBlack - possibilityWhite;
         }
 
         public static bool Final(Board board)
