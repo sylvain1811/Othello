@@ -124,7 +124,7 @@ namespace OthelloIA_G3
 
             //Console.WriteLine(root.ToString());
 
-            var bestOp = AlphaBeta(root, level, whiteTurn, (int)TreeNode.EType.MAX, myScore).Item2;
+            var bestOp = AlphaBeta(root, level, whiteTurn, (int)TreeNode.EType.MAX, -int.MaxValue).Item2;
 
             if (bestOp == null)
             {
@@ -269,23 +269,22 @@ namespace OthelloIA_G3
             }
             return false;
         }
-        private Tuple<int, Cell> AlphaBeta(TreeNode root, int level, bool isWhite, int minOrMax, int parentValue)
+        private Tuple<double, Cell> AlphaBeta(TreeNode root, int level, bool isWhite, int minOrMax, double parentValue)
         {
             if (level == 0 || root.Final())
             {
-                return Tuple.Create<int, Cell>(root.Eval(), null);
+                return Tuple.Create<double, Cell>(root.Eval(), null);
             }
 
-            int optVal = minOrMax * -int.MaxValue;
+            double optVal = minOrMax * (-int.MaxValue + 1);
             Cell optOp = null;
             var ops = root.Ops(isWhite);
 
             foreach (var op in ops)
             {
                 TreeNode newTree = root.Apply(op.C, op.L, isWhite);
-                // int val = AlphaBeta(newTree, level - 1, !isWhite, -minOrMax, optVal).Item1;
-                int val = AlphaBeta(newTree, level - 1, !isWhite, -minOrMax, optVal).Item1;
-                if (val * minOrMax > optVal * minOrMax)
+                double val = AlphaBeta(newTree, level - 1, !isWhite, -minOrMax, optVal).Item1;
+                if (val * minOrMax >= optVal * minOrMax)
                 {
                     optVal = val;
                     optOp = op;
@@ -294,7 +293,9 @@ namespace OthelloIA_G3
                         break;
                 }
             }
-            return Tuple.Create<int, Cell>(optVal, optOp);
+            return Tuple.Create(optVal, optOp);
+
+            // return Tuple.Create(0, new Cell(-1, -1));
         }
     }
 }

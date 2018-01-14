@@ -4,6 +4,12 @@ namespace OthelloIA_G3
 {
     class Program
     {
+        // ATTRIBUTS
+        static string WHITE = "WHITE";
+        static string BLACK = "BLACK";
+        static string TITLE = "===============================================================================";
+        static string BORDER = "----------------------------------------------------------------";
+
         /// <summary>
         /// Test de l'IA en mode console.
         /// </summary>
@@ -69,15 +75,11 @@ namespace OthelloIA_G3
         static void PrintFinish(Board board)
         {
             Console.WriteLine(TITLE);
-            Console.WriteLine($"Score : {BLACK} : {board.GetBlackScore()}; {WHITE}: {board.GetWhiteScore()}");
+            Console.WriteLine($"FINI ! Score : {BLACK} : {board.GetBlackScore()}; {WHITE}: {board.GetWhiteScore()}");
             Console.WriteLine(TITLE);
         }
 
-        static string WHITE = "WHITE";
-        static string BLACK = "BLACK";
-        static string TITLE = "===============================================================================";
-        static string BORDER = "----------------------------------------------------------------";
-        public static void PrintBoard(int[,] board, bool whiteTurn, int c, int l)
+        static void PrintBoard(int[,] board, bool whiteTurn, int c, int l)
         {
             string turn = whiteTurn ? WHITE : BLACK;
             //Console.Clear();
