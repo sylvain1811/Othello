@@ -23,12 +23,12 @@ namespace OthelloIA_G3
         }
 
         /// <summary>
-        /// V1 : La valeur retournée indique la différence de coups possible entre les joueurs. Si positif : noir à l'avantage.
-        /// V2 : Division Noir/Blanc : si val > 1 alors black a l'avantage.
+        /// Evaluation du board.
         /// </summary>
         /// <returns></returns>
         public double Eval()
         {
+            // TODO Refaire avec une matrice
             int possibilityWhite = Ops(true).Count;
             int possibilityBlack = Ops(false).Count;
             return possibilityBlack - possibilityWhite;

@@ -276,15 +276,21 @@ namespace OthelloIA_G3
                 return Tuple.Create<double, Cell>(root.Eval(), null);
             }
 
-            double optVal = minOrMax * (-int.MaxValue + 1);
-            Cell optOp = null;
+            double optVal = minOrMax * -int.MaxValue;
+
             var ops = root.Ops(isWhite);
+
+            Cell optOp = null;
+            if (ops.Count > 0)
+            {
+                optOp = ops[0];
+            }
 
             foreach (var op in ops)
             {
                 TreeNode newTree = root.Apply(op.C, op.L, isWhite);
                 double val = AlphaBeta(newTree, level - 1, !isWhite, -minOrMax, optVal).Item1;
-                if (val * minOrMax >= optVal * minOrMax)
+                if (val * minOrMax > optVal * minOrMax)
                 {
                     optVal = val;
                     optOp = op;
