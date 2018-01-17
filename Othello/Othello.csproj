@@ -94,5 +94,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OthelloIA_G3\OthelloIA_G3.csproj">
+      <Project>{90c344fa-02b9-4077-9f02-0cb7f6748d54}</Project>
+      <Name>OthelloIA_G3</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -23,18 +23,22 @@ namespace Othello
         public MainWindow()
         {
             InitializeComponent();
-            int x = 0;
-            foreach (ColumnDefinition col in gridBoard.ColumnDefinitions.ToList())
+            Button[,] tabButtun = new Button[8, 8];
+            for (int c = 0; c < 8; c++)
             {
-                Button btn = new Button
+                for (int l = 0; l < 8; l++)
                 {
-                    Content = "salut " + x,
-
-                };
-                Console.WriteLine(x);
-                gridBoard.Children.Add(btn);
-
-                x++;
+                    Button btn = new Button
+                    {
+                        Content = $"btn ({c};{l})",
+                        Background = Brushes.Transparent,
+                        BorderBrush = Brushes.White
+                    };
+                    tabButtun[c, l] = btn;
+                    Grid.SetColumn(btn, c);
+                    Grid.SetRow(btn, l);
+                    gridBoard.Children.Add(btn);
+                }
             }
         }
     }
