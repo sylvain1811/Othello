@@ -37,17 +37,21 @@ namespace Othello
 
             if (board.PlayMove(c, l, whiteTurn))
             {
+                // Coup joué
                 pawn.Val = board.GetBoard()[c, l];
                 whiteTurn = !whiteTurn;
                 UpdateUIBoard();
+                // TODO Check if next player should pass.
             }
             else
             {
+                // Impossible de jouer ce coup
                 /*var whosPlaying = whiteTurn ? BLANC : NOIR;
                 MessageBox.Show($"Coup impossible de {whosPlaying}");*/
             }
             if (board.IsFinished())
             {
+                // Partie terminée
                 var scoreBlack = board.GetBlackScore();
                 var scoreWhite = board.GetWhiteScore();
                 string winner;
@@ -57,10 +61,12 @@ namespace Othello
                     winner = $"Gagnant : {BLANC}";
                 else
                     winner = "Match nul";
-                var m = MessageBox.Show($"Score joueur noir : {board.GetBlackScore()}\nScore joueur blanc : {board.GetWhiteScore()}\n{winner}", "Partie terminée !", MessageBoxButton.YesNo);
+                var m = MessageBox.Show($"Score joueur noir : {board.GetBlackScore()}\nScore joueur blanc : {board.GetWhiteScore()}\n{winner}\n\nSouhaitez-vous relancer une partie ?", "Partie terminée !", MessageBoxButton.YesNo);
                 if (m == MessageBoxResult.Yes)
+                    // Recommence une partie
                     StartGame();
                 else
+                    // Ferme l'application
                     Close();
             }
         }

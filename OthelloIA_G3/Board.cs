@@ -286,23 +286,24 @@ namespace OthelloIA_G3
             {
                 optOp = ops[0];
             }
-
-            foreach (var op in ops)
+            // Pas besoin de chercher le meilleur coup si un seul est possible.
+            if (ops.Count > 1)
             {
-                TreeNode newTree = root.Apply(op.C, op.L, isWhite);
-                double val = AlphaBeta(newTree, level - 1, !isWhite, -minOrMax, optVal).Item1;
-                if (val * minOrMax > optVal * minOrMax)
+                foreach (var op in ops)
                 {
-                    optVal = val;
-                    optOp = op;
+                    TreeNode newTree = root.Apply(op.C, op.L, isWhite);
+                    double val = AlphaBeta(newTree, level - 1, !isWhite, -minOrMax, optVal).Item1;
+                    if (val * minOrMax > optVal * minOrMax)
+                    {
+                        optVal = val;
+                        optOp = op;
 
-                    if (optVal * minOrMax > parentValue * minOrMax)
-                        break;
+                        if (optVal * minOrMax > parentValue * minOrMax)
+                            break;
+                    }
                 }
             }
             return Tuple.Create(optVal, optOp);
-
-            // return Tuple.Create(0, new Cell(-1, -1));
         }
     }
 }
