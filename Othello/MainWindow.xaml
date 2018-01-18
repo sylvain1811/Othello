@@ -9,15 +9,39 @@
 
     <Window.Resources>
         <Style TargetType="{x:Type Button}" x:Key="pawnStyle">
-            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
             <Setter Property="BorderBrush" Value="White"/>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="BorderBrush" Value="Yellow"/>
-                    <Setter Property="BorderThickness" Value="3,3,3,3"/>
-                    <Setter Property="Foreground" Value="Yellow"/>
-                </Trigger>
-            </Style.Triggers>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button" >
+                        <Border Name="border"
+                            BorderThickness="1"
+                            BorderBrush="White"
+                            Background="Green">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <!--<Grid>
+                            <Ellipse Name="EllipsePl1" Width="30" Height="30" Stroke="#FF000000" StrokeThickness="1">
+                                <Ellipse.Fill>
+                                    <SolidColorBrush Color="White"/>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>-->
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+
+            </Setter>
+            <Setter Property="Background" Value="Green"/>
+        </Style>
+        <Style TargetType="{x:Type TextBlock}" x:Key="headerStyle">
+            <Setter Property="Background" Value="#6E381E"/>
+            <Setter Property="Foreground" Value="White"/>
         </Style>
     </Window.Resources>
 
@@ -27,16 +51,17 @@
             <ColumnDefinition Width="2*"></ColumnDefinition>
             <ColumnDefinition Width="1*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
 
+        <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock x:Name="turn" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="1" Text="salut" Margin="0,10" FontSize="18" FontFamily="Stencil"></TextBlock>
-        <Border BorderBrush="#6E381E" BorderThickness="3" Grid.Row="1" Grid.Column="1">
-            <Grid Name="gridBoard" Background="Green" >
+
+        <TextBlock x:Name="turn" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="1" Text="Tour du joueur noir" Margin="0,10" FontSize="22" FontFamily="Stencil"></TextBlock>
+        <Border BorderBrush="#6E381E" BorderThickness="1" Grid.Row="1" Grid.Column="1">
+            <Grid Name="gridBoard" Background="#6E381E" >
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="10*"></ColumnDefinition>
+                    <ColumnDefinition Width="10*" ></ColumnDefinition>
                     <ColumnDefinition Width="10*"></ColumnDefinition>
                     <ColumnDefinition Width="10*"></ColumnDefinition>
                     <ColumnDefinition Width="10*"></ColumnDefinition>
@@ -59,17 +84,7 @@
                     <RowDefinition Height="10*"></RowDefinition>
                     <RowDefinition Height="10*"></RowDefinition>
                 </Grid.RowDefinitions>
-                <TextBlock Text="A" Grid.Column="1" Grid.Row ="0">
-                    <TextBlock.Style>
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Background" Value="#6E381E"/>
-                            <Setter Property="Foreground" Value="White"/>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
             </Grid>
-
         </Border>
-
     </Grid>
 </Window>

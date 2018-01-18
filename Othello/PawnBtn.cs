@@ -5,15 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace Othello
 {
     class PawnBtn : Button
     {
-        public int C {get;set;}
+        public int C { get; set; }
         public int L { get; set; }
-        public int Val {
-            // get { };
+        public int Val
+        {
+            get { return Val; }
             set
             {
                 Content = value;

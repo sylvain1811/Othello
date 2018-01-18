@@ -40,7 +40,9 @@ namespace Othello
                     var val = board.GetBoard()[c, l];
                     PawnBtn pawnBtn = new PawnBtn(c, l, val)
                     {
-                        Style = resource
+                        Style = resource,
+                        Background = Brushes.White
+                        
                     };
 
                     pawnBtn.Click += Pawn_Click;
@@ -50,6 +52,41 @@ namespace Othello
                     tabPawnBtn[c, l] = pawnBtn;
                 }
             }
+
+            var columns = "ABCDEFGH";
+            var style = (Style)FindResource("headerStyle");
+
+            for (int c = 1; c < 9; c++)
+            {
+                AddTextBlock(c, 0, columns, style, false);
+                AddTextBlock(c, 9, columns, style, false);
+            }
+            for (int l = 1; l < 9; l++)
+            {
+                AddTextBlock(0, l, columns, style, true);
+                AddTextBlock(9, l, columns, style, true);
+            }
+        }
+
+        private void AddTextBlock(int c, int l, string columns, Style style, bool isLine)
+        {
+            TextBlock textBlock = new TextBlock
+            {
+                Style = style,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            if (isLine)
+            {
+                textBlock.Text = "" + l;
+            }
+            else
+            {
+                textBlock.Text = "" + columns[c - 1];
+            }
+            Grid.SetRow(textBlock, l);
+            Grid.SetColumn(textBlock, c);
+            gridBoard.Children.Add(textBlock);
         }
 
         private void Pawn_Click(object sender, RoutedEventArgs e)
@@ -66,8 +103,8 @@ namespace Othello
             }
             else
             {
-                var whosPlaying = whiteTurn ? BLANC : NOIR;
-                MessageBox.Show($"Coup impossible de {whosPlaying}");
+                /*var whosPlaying = whiteTurn ? BLANC : NOIR;
+                MessageBox.Show($"Coup impossible de {whosPlaying}");*/
             }
         }
 
@@ -82,8 +119,7 @@ namespace Othello
                 }
             }
             var whosPlaying = whiteTurn ? BLANC : NOIR;
-            turn.Text = $"Tour de {whosPlaying}";
-            //throw new NotImplementedException();
+            turn.Text = $"Tour du joueur {whosPlaying}";
         }
     }
 }

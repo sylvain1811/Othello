@@ -43,9 +43,12 @@ namespace OthelloIA_G3
             maxPlayerCoin = isWhite ? board.GetWhiteScore() : board.GetBlackScore();
             minPlayerCoin = isWhite ? board.GetBlackScore() : board.GetWhiteScore();
 
-            if (maxPlayerCoin > minPlayerCoin){
-                coinParity = (100 * maxPlayerCoin)/(maxPlayerCoin + minPlayerCoin);
-            }else{
+            if (maxPlayerCoin > minPlayerCoin)
+            {
+                coinParity = (100 * maxPlayerCoin) / (maxPlayerCoin + minPlayerCoin);
+            }
+            else
+            {
                 coinParity = -(100 * maxPlayerCoin) / (maxPlayerCoin + minPlayerCoin);
             }
 
@@ -55,15 +58,18 @@ namespace OthelloIA_G3
             maxPlayerMove = isWhite ? nbrOfPlayableMoveWhite : nbrOfPlayableMoveBlack;
             minPlayerMove = isWhite ? nbrOfPlayableMoveBlack : nbrOfPlayableMoveWhite;
 
-            if (maxPlayerMove > minPlayerMove){
+            if (maxPlayerMove > minPlayerMove)
+            {
                 mobility = (100 * maxPlayerMove) / (maxPlayerMove + minPlayerMove);
-            }else if (maxPlayerMove < minPlayerMove){
+            }
+            else if (maxPlayerMove < minPlayerMove)
+            {
                 mobility = -(100 * maxPlayerMove) / (maxPlayerMove + minPlayerMove);
             }
 
             corners = GetCornerValue(mat_eval);
-            
-            return 2*coinParity + 5*mobility + 10*corners;
+
+            return 2 * coinParity + 5 * mobility + 10 * corners;
         }
 
         private int GetCornerValue(int[,] mat_eval)
@@ -71,9 +77,12 @@ namespace OthelloIA_G3
             int typeCoin = isWhite ? 0 : 1;
             int cornerValue = 0;
 
-            for (int c = 0; c < 8; c++){
-                for (int l = 0; l < 8; l++){
-                    if (board.GetBoard()[c,l] == typeCoin){
+            for (int c = 0; c < 8; c++)
+            {
+                for (int l = 0; l < 8; l++)
+                {
+                    if (board.GetBoard()[c, l] == typeCoin)
+                    {
                         cornerValue += board.GetBoard()[c, l];
                     }
                 }
