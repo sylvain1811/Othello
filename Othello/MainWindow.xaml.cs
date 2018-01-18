@@ -5,13 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using OthelloIA_G3;
 
 namespace Othello
@@ -42,17 +36,82 @@ namespace Othello
                     {
                         Style = resource,
                         Background = Brushes.White
-                        
                     };
 
                     pawnBtn.Click += Pawn_Click;
-                    Grid.SetColumn(pawnBtn, c + 1);
-                    Grid.SetRow(pawnBtn, l + 1);
-                    gridBoard.Children.Add(pawnBtn);
                     tabPawnBtn[c, l] = pawnBtn;
+
+                    Border border = new Border
+                    {
+                        BorderThickness = new Thickness(0.7),
+                        BorderBrush = Brushes.White
+                    };
+
+                    Grid grid = new Grid
+                    {
+                        Background = Brushes.Green
+                    };
+                    Viewbox viewbox = new Viewbox
+                    {
+                        Child = pawnBtn.Ellipse,
+                        Margin = new Thickness(4)
+                    };
+                    grid.Children.Add(viewbox);
+                    grid.Children.Add(pawnBtn);
+
+                    border.Child = grid;
+                    Grid.SetColumn(border, c + 1);
+                    Grid.SetRow(border, l + 1);
+                    gridBoard.Children.Add(border);
                 }
             }
+            AddHeader();
+            UpdateUIBoard();
+        }
 
+
+        private void Pawn_Click(object sender, RoutedEventArgs e)
+        {
+            PawnBtn pawn = (PawnBtn)sender;
+            int c = pawn.C;
+            int l = pawn.L;
+
+            if (board.PlayMove(c, l, whiteTurn))
+            {
+                pawn.Val = board.GetBoard()[c, l];
+                whiteTurn = !whiteTurn;
+                UpdateUIBoard();
+            }
+            else
+            {
+                /*var whosPlaying = whiteTurn ? BLANC : NOIR;
+                MessageBox.Show($"Coup impossible de {whosPlaying}");*/
+            }
+        }
+
+        private void UpdateUIBoard()
+        {
+            var tabBoard = board.GetBoard();
+            for (int c = 0; c < 8; c++)
+            {
+                for (int l = 0; l < 8; l++)
+                {
+                    if (board.IsPlayable(c, l, whiteTurn))
+                        tabPawnBtn[c, l].IsPlayable = whiteTurn ? 0 : 1;
+                    else
+                        tabPawnBtn[c, l].IsPlayable = -1;
+
+                    tabPawnBtn[c, l].Val = tabBoard[c, l];
+                }
+            }
+            var whosPlaying = whiteTurn ? BLANC : NOIR;
+            turn.Text = $"Tour du joueur {whosPlaying}";
+            blackScoreText.Text = $"{board.GetBlackScore()}";
+            whiteScoreText.Text = $"{board.GetWhiteScore()}";
+        }
+
+        private void AddHeader()
+        {
             var columns = "ABCDEFGH";
             var style = (Style)FindResource("headerStyle");
 
@@ -86,40 +145,9 @@ namespace Othello
             }
             Grid.SetRow(textBlock, l);
             Grid.SetColumn(textBlock, c);
+
             gridBoard.Children.Add(textBlock);
         }
 
-        private void Pawn_Click(object sender, RoutedEventArgs e)
-        {
-            PawnBtn pawn = (PawnBtn)sender;
-            int c = pawn.C;
-            int l = pawn.L;
-
-            if (board.PlayMove(c, l, whiteTurn))
-            {
-                pawn.Val = board.GetBoard()[c, l];
-                whiteTurn = !whiteTurn;
-                UpdateUIBoard();
-            }
-            else
-            {
-                /*var whosPlaying = whiteTurn ? BLANC : NOIR;
-                MessageBox.Show($"Coup impossible de {whosPlaying}");*/
-            }
-        }
-
-        private void UpdateUIBoard()
-        {
-            var tabBoard = board.GetBoard();
-            for (int c = 0; c < 8; c++)
-            {
-                for (int l = 0; l < 8; l++)
-                {
-                    tabPawnBtn[c, l].Val = tabBoard[c, l];
-                }
-            }
-            var whosPlaying = whiteTurn ? BLANC : NOIR;
-            turn.Text = $"Tour du joueur {whosPlaying}";
-        }
     }
 }

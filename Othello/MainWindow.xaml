@@ -5,23 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Othello"
         mc:Ignorable="d"
-        Title="Othello" Height="500" Width="900">
+        Title="Othello" Height="500" Width="900" MinHeight="400" MinWidth="700">
 
     <Window.Resources>
         <Style TargetType="{x:Type Button}" x:Key="pawnStyle">
-            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <!--<Setter Property="OverridesDefaultStyle" Value="True"/>-->
             <Setter Property="BorderBrush" Value="White"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button" >
                         <Border Name="border"
-                            BorderThickness="1"
+                            BorderThickness="0"
                             BorderBrush="White"
-                            Background="Green">
+                            Background="Transparent">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <!--<Grid>
-                            <Ellipse Name="EllipsePl1" Width="30" Height="30" Stroke="#FF000000" StrokeThickness="1">
+                            <Ellipse Name="EllipsePl1" Margin="3" Width="Auto" Height="Auto" >
                                 <Ellipse.Fill>
                                     <SolidColorBrush Color="White"/>
                                 </Ellipse.Fill>
@@ -30,14 +30,13 @@
                         </Grid>-->
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="Foreground" Value="Red"/>
+                                <Setter Property="Background" Value="Red"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
-
             </Setter>
-            <Setter Property="Background" Value="Green"/>
         </Style>
         <Style TargetType="{x:Type TextBlock}" x:Key="headerStyle">
             <Setter Property="Background" Value="#6E381E"/>
@@ -57,11 +56,37 @@
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <TextBlock x:Name="turn" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="1" Text="Tour du joueur noir" Margin="0,10" FontSize="22" FontFamily="Stencil"></TextBlock>
+        <Grid Grid.Column="0" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="2*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Score joueur noir" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Impact" FontSize="16"></TextBlock>
+            <Viewbox Grid.Row="1"  Height="Auto" Width="Auto">
+                <Ellipse Height="100" Width="100" Fill="Black"/>
+            </Viewbox>
+            <TextBlock x:Name="blackScoreText" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Impact" FontSize="60"></TextBlock>
+        </Grid>
+        <Grid Grid.Column="2" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="2*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Score joueur blanc" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Impact" FontSize="16"></TextBlock>
+            <Viewbox Grid.Row="1"  Height="Auto" Width="Auto">
+                <Ellipse Fill="White" Height="100" Width="100" Stroke="Black"></Ellipse>
+            </Viewbox>
+            <TextBlock x:Name="whiteScoreText" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Impact" FontSize="60"></TextBlock>
+        </Grid>
+
+
+        <TextBlock x:Name="turn" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="1" Text="Tour du joueur noir" Margin="0,10" FontSize="22" FontFamily="Impact"></TextBlock>
         <Border BorderBrush="#6E381E" BorderThickness="1" Grid.Row="1" Grid.Column="1">
             <Grid Name="gridBoard" Background="#6E381E" >
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="10*" ></ColumnDefinition>
+                    <ColumnDefinition Width="10*"></ColumnDefinition>
                     <ColumnDefinition Width="10*"></ColumnDefinition>
                     <ColumnDefinition Width="10*"></ColumnDefinition>
                     <ColumnDefinition Width="10*"></ColumnDefinition>
