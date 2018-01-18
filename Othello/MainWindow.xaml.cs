@@ -24,6 +24,70 @@ namespace Othello
         public MainWindow()
         {
             InitializeComponent();
+            StartGame();
+        }
+
+
+
+        private void Pawn_Click(object sender, RoutedEventArgs e)
+        {
+            PawnBtn pawn = (PawnBtn)sender;
+            int c = pawn.C;
+            int l = pawn.L;
+
+            if (board.PlayMove(c, l, whiteTurn))
+            {
+                pawn.Val = board.GetBoard()[c, l];
+                whiteTurn = !whiteTurn;
+                UpdateUIBoard();
+            }
+            else
+            {
+                /*var whosPlaying = whiteTurn ? BLANC : NOIR;
+                MessageBox.Show($"Coup impossible de {whosPlaying}");*/
+            }
+            if (board.IsFinished())
+            {
+                var scoreBlack = board.GetBlackScore();
+                var scoreWhite = board.GetWhiteScore();
+                string winner;
+                if (scoreBlack > scoreWhite)
+                    winner = $"Gagnant : {NOIR}";
+                else if (scoreWhite > scoreBlack)
+                    winner = $"Gagnant : {BLANC}";
+                else
+                    winner = "Match nul";
+                var m = MessageBox.Show($"Score joueur noir : {board.GetBlackScore()}\nScore joueur blanc : {board.GetWhiteScore()}\n{winner}", "Partie terminée !", MessageBoxButton.YesNo);
+                if (m == MessageBoxResult.Yes)
+                    StartGame();
+                else
+                    Close();
+            }
+        }
+
+        private void UpdateUIBoard()
+        {
+            var tabBoard = board.GetBoard();
+            for (int c = 0; c < 8; c++)
+            {
+                for (int l = 0; l < 8; l++)
+                {
+                    if (board.IsPlayable(c, l, whiteTurn))
+                        tabPawnBtn[c, l].IsPlayable = whiteTurn ? 0 : 1;
+                    else
+                        tabPawnBtn[c, l].IsPlayable = -1;
+
+                    tabPawnBtn[c, l].Val = tabBoard[c, l];
+                }
+            }
+            var whosPlaying = whiteTurn ? BLANC : NOIR;
+            turn.Text = $"Tour du joueur {whosPlaying}";
+            blackScoreText.Text = $"{board.GetBlackScore()}";
+            whiteScoreText.Text = $"{board.GetWhiteScore()}";
+        }
+
+        private void StartGame()
+        {
             board = new Board();
             tabPawnBtn = new PawnBtn[8, 8];
             Style resource = (Style)FindResource("pawnStyle");
@@ -68,48 +132,6 @@ namespace Othello
             AddHeader();
             UpdateUIBoard();
         }
-
-
-        private void Pawn_Click(object sender, RoutedEventArgs e)
-        {
-            PawnBtn pawn = (PawnBtn)sender;
-            int c = pawn.C;
-            int l = pawn.L;
-
-            if (board.PlayMove(c, l, whiteTurn))
-            {
-                pawn.Val = board.GetBoard()[c, l];
-                whiteTurn = !whiteTurn;
-                UpdateUIBoard();
-            }
-            else
-            {
-                /*var whosPlaying = whiteTurn ? BLANC : NOIR;
-                MessageBox.Show($"Coup impossible de {whosPlaying}");*/
-            }
-        }
-
-        private void UpdateUIBoard()
-        {
-            var tabBoard = board.GetBoard();
-            for (int c = 0; c < 8; c++)
-            {
-                for (int l = 0; l < 8; l++)
-                {
-                    if (board.IsPlayable(c, l, whiteTurn))
-                        tabPawnBtn[c, l].IsPlayable = whiteTurn ? 0 : 1;
-                    else
-                        tabPawnBtn[c, l].IsPlayable = -1;
-
-                    tabPawnBtn[c, l].Val = tabBoard[c, l];
-                }
-            }
-            var whosPlaying = whiteTurn ? BLANC : NOIR;
-            turn.Text = $"Tour du joueur {whosPlaying}";
-            blackScoreText.Text = $"{board.GetBlackScore()}";
-            whiteScoreText.Text = $"{board.GetWhiteScore()}";
-        }
-
         private void AddHeader()
         {
             var columns = "ABCDEFGH";
