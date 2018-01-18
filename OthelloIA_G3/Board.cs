@@ -269,6 +269,7 @@ namespace OthelloIA_G3
             }
             return false;
         }
+
         private Tuple<double, Cell> AlphaBeta(TreeNode root, int level, bool isWhite, int minOrMax, double parentValue)
         {
             if (level == 0 || root.Final())
