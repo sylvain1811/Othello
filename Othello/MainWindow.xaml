@@ -5,38 +5,71 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Othello"
         mc:Ignorable="d"
-        Title="Othello" Height="500" Width="500">
+        Title="Othello" Height="500" Width="900">
+
     <Window.Resources>
-        <Style TargetType="{x:Type Button}">
-            <Setter Property="Background" Value="Green"/>
+        <Style TargetType="{x:Type Button}" x:Key="pawnStyle">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="White"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="BorderBrush" Value="Yellow"/>
+                    <Setter Property="BorderThickness" Value="3,3,3,3"/>
+                    <Setter Property="Foreground" Value="Yellow"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
     </Window.Resources>
 
-    <Grid Name="gridBoard" Background="Green">
+    <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="8*"></ColumnDefinition>
-            <ColumnDefinition Width="8*"></ColumnDefinition>
-            <ColumnDefinition Width="8*"></ColumnDefinition>
-            <ColumnDefinition Width="8*"></ColumnDefinition>
-            <ColumnDefinition Width="8*"></ColumnDefinition>
-            <ColumnDefinition Width="8*"></ColumnDefinition>
-            <ColumnDefinition Width="8*"></ColumnDefinition>
-            <ColumnDefinition Width="8*"></ColumnDefinition>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+            <ColumnDefinition Width="2*"></ColumnDefinition>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="8*"></RowDefinition>
-            <RowDefinition Height="8*"></RowDefinition>
-            <RowDefinition Height="8*"></RowDefinition>
-            <RowDefinition Height="8*"></RowDefinition>
-            <RowDefinition Height="8*"></RowDefinition>
-            <RowDefinition Height="8*"></RowDefinition>
-            <RowDefinition Height="8*"></RowDefinition>
-            <RowDefinition Height="8*"></RowDefinition>
+
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
+        <TextBlock x:Name="turn" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="1" Text="salut" Margin="0,10" FontSize="18" FontFamily="Stencil"></TextBlock>
+        <Border BorderBrush="#6E381E" BorderThickness="3" Grid.Row="1" Grid.Column="1">
+            <Grid Name="gridBoard" Background="Green" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10*"></ColumnDefinition>
+                    <ColumnDefinition Width="10*"></ColumnDefinition>
+                    <ColumnDefinition Width="10*"></ColumnDefinition>
+                    <ColumnDefinition Width="10*"></ColumnDefinition>
+                    <ColumnDefinition Width="10*"></ColumnDefinition>
+                    <ColumnDefinition Width="10*"></ColumnDefinition>
+                    <ColumnDefinition Width="10*"></ColumnDefinition>
+                    <ColumnDefinition Width="10*"></ColumnDefinition>
+                    <ColumnDefinition Width="10*"></ColumnDefinition>
+                    <ColumnDefinition Width="10*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10*"></RowDefinition>
+                    <RowDefinition Height="10*"></RowDefinition>
+                    <RowDefinition Height="10*"></RowDefinition>
+                    <RowDefinition Height="10*"></RowDefinition>
+                    <RowDefinition Height="10*"></RowDefinition>
+                    <RowDefinition Height="10*"></RowDefinition>
+                    <RowDefinition Height="10*"></RowDefinition>
+                    <RowDefinition Height="10*"></RowDefinition>
+                    <RowDefinition Height="10*"></RowDefinition>
+                    <RowDefinition Height="10*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBlock Text="A" Grid.Column="1" Grid.Row ="0">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Background" Value="#6E381E"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+
+        </Border>
+
     </Grid>
 </Window>
