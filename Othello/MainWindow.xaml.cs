@@ -20,8 +20,6 @@ namespace Othello
         public MainWindow()
         {
             InitializeComponent();
-            contextPlayers = new ContextPlayers(0, 0);
-            DataContext = contextPlayers;
             StartGame();
         }
 
@@ -52,6 +50,7 @@ namespace Othello
                 contextPlayers.TimerWhite.Stop();
                 var scoreBlack = board.GetBlackScore();
                 var scoreWhite = board.GetWhiteScore();
+                UpdateUI(true);
                 string winner;
                 if (scoreBlack > scoreWhite)
                     winner = $"Gagnant : {NOIR}";
@@ -66,7 +65,6 @@ namespace Othello
                 else
                     // Ferme l'application
                     Close();
-                UpdateUI(true);
             }
             else
             {
@@ -128,6 +126,9 @@ namespace Othello
 
         private void StartGame()
         {
+            whiteTurn = false;
+            contextPlayers = new ContextPlayers(0, 0);
+            DataContext = contextPlayers;
             board = new Board();
             tabPawnBtn = new PawnBtn[8, 8];
             Style resource = (Style)FindResource("pawnStyle");
@@ -182,6 +183,7 @@ namespace Othello
             }
             AddHeader();
             UpdateUI(false);
+
         }
         private void AddHeader()
         {
@@ -222,5 +224,14 @@ namespace Othello
             gridBoard.Children.Add(textBlock);
         }
 
+        private void MenuItemAbout_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Jeu de l'Othello. \nProjet .NET\nAuteurs: \nRenaud Sylvain, Costa Pedro");
+        }
+
+        private void MenuItemNewGame_Click(object sender, RoutedEventArgs e)
+        {
+            StartGame();
+        }
     }
 }

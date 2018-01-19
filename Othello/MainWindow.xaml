@@ -32,85 +32,105 @@
         <Style TargetType="{x:Type TextBlock}" x:Key="headerStyle">
             <Setter Property="Background" Value="#6E381E"/>
             <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontFamily" Value="MS Office Symbol Regular"></Setter>
         </Style>
     </Window.Resources>
-
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"></ColumnDefinition>
-            <ColumnDefinition Width="2*"></ColumnDefinition>
-            <ColumnDefinition Width="1*"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="_Partie">
+                    <MenuItem IsEnabled="True" Header="_Nouvelle partie" Click="MenuItemNewGame_Click"></MenuItem>
+                    <MenuItem IsEnabled="False" Header="_Sauver la partie en cours"></MenuItem>
+                    <MenuItem IsEnabled="False" Header="Charger une partie"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="A propos">
+                    <MenuItem Header="A propos" Click="MenuItemAbout_Click"></MenuItem>
+                </MenuItem>
+            </Menu>
+        </DockPanel>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="1*"></RowDefinition>
-                <RowDefinition Height="1*"></RowDefinition>
-                <RowDefinition Height="2*"></RowDefinition>
-                <RowDefinition Height="1*"></RowDefinition>
-                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
-            <TextBlock Text="Score joueur noir" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="MS Office Symbol Bold" FontSize="18"></TextBlock>
-            <Viewbox Grid.Row="1"  Height="Auto" Width="Auto">
-                <Ellipse Height="1" Width="1" Fill="Black"/>
-            </Viewbox>
-            <TextBlock Text="{Binding BlackScore}" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Impact" FontSize="60"></TextBlock>
-            <TextBlock Text="Temps de réfléxion" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontFamily="MS Office Symbol Bold" FontSize="18"></TextBlock>
-            <TextBlock Text="{Binding StrTimerBlack}" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="MS Office Symbol Bold" FontSize="20"></TextBlock>
 
-        </Grid>
-        <Grid Grid.Column="2" Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*"></RowDefinition>
-                <RowDefinition Height="1*"></RowDefinition>
-                <RowDefinition Height="2*"></RowDefinition>
-                <RowDefinition Height="1*"></RowDefinition>
-                <RowDefinition Height="1*"></RowDefinition>
-            </Grid.RowDefinitions>
-            <TextBlock Text="Score joueur blanc" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="MS Office Symbol Bold" FontSize="18"></TextBlock>
-            <Viewbox Grid.Row="1"  Height="Auto" Width="Auto">
-                <Ellipse Fill="White" Height="100" Width="100" Stroke="Black"></Ellipse>
-            </Viewbox>
-            <TextBlock Text="{Binding WhiteScore}" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Impact" FontSize="60"></TextBlock>
-            <TextBlock Text="Temps de réfléxion" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontFamily="MS Office Symbol Bold" FontSize="18"></TextBlock>
-            <TextBlock Text="{Binding StrTimerWhite}" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="MS Office Symbol Bold" FontSize="20"></TextBlock>
-
-        </Grid>
-
-
-        <TextBlock x:Name="turn" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="1" Text="Tour du joueur noir" Margin="0,10" FontSize="24" FontFamily="Impact"></TextBlock>
-        <Border BorderBrush="#6E381E" BorderThickness="1" Grid.Row="1" Grid.Column="1">
-            <Grid Name="gridBoard" Background="#6E381E" >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="10*"></ColumnDefinition>
-                    <ColumnDefinition Width="10*"></ColumnDefinition>
-                    <ColumnDefinition Width="10*"></ColumnDefinition>
-                    <ColumnDefinition Width="10*"></ColumnDefinition>
-                    <ColumnDefinition Width="10*"></ColumnDefinition>
-                    <ColumnDefinition Width="10*"></ColumnDefinition>
-                    <ColumnDefinition Width="10*"></ColumnDefinition>
-                    <ColumnDefinition Width="10*"></ColumnDefinition>
-                    <ColumnDefinition Width="10*"></ColumnDefinition>
-                    <ColumnDefinition Width="10*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0" Grid.Row="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="10*"></RowDefinition>
-                    <RowDefinition Height="10*"></RowDefinition>
-                    <RowDefinition Height="10*"></RowDefinition>
-                    <RowDefinition Height="10*"></RowDefinition>
-                    <RowDefinition Height="10*"></RowDefinition>
-                    <RowDefinition Height="10*"></RowDefinition>
-                    <RowDefinition Height="10*"></RowDefinition>
-                    <RowDefinition Height="10*"></RowDefinition>
-                    <RowDefinition Height="10*"></RowDefinition>
-                    <RowDefinition Height="10*"></RowDefinition>
+                    <RowDefinition Height="1*"></RowDefinition>
+                    <RowDefinition Height="1*"></RowDefinition>
+                    <RowDefinition Height="2*"></RowDefinition>
+                    <RowDefinition Height="1*"></RowDefinition>
+                    <RowDefinition Height="1*"></RowDefinition>
                 </Grid.RowDefinitions>
+                <TextBlock Text="Score joueur noir" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="MS Office Symbol Bold" FontSize="18"></TextBlock>
+                <Viewbox Grid.Row="1"  Height="Auto" Width="Auto">
+                    <Ellipse Height="1" Width="1" Fill="Black"/>
+                </Viewbox>
+                <TextBlock Text="{Binding BlackScore}" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Impact" FontSize="60"></TextBlock>
+                <TextBlock Text="Temps de réfléxion" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontFamily="MS Office Symbol Bold" FontSize="18"></TextBlock>
+                <TextBlock Text="{Binding StrTimerBlack}" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="MS Office Symbol Bold" FontSize="20"></TextBlock>
+
             </Grid>
-        </Border>
+            <Grid Grid.Column="2" Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"></RowDefinition>
+                    <RowDefinition Height="1*"></RowDefinition>
+                    <RowDefinition Height="2*"></RowDefinition>
+                    <RowDefinition Height="1*"></RowDefinition>
+                    <RowDefinition Height="1*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Score joueur blanc" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="MS Office Symbol Bold" FontSize="18"></TextBlock>
+                <Viewbox Grid.Row="1"  Height="Auto" Width="Auto">
+                    <Ellipse Fill="White" Height="100" Width="100" Stroke="Black"></Ellipse>
+                </Viewbox>
+                <TextBlock Text="{Binding WhiteScore}" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Impact" FontSize="60"></TextBlock>
+                <TextBlock Text="Temps de réfléxion" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontFamily="MS Office Symbol Bold" FontSize="18"></TextBlock>
+                <TextBlock Text="{Binding StrTimerWhite}" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="MS Office Symbol Bold" FontSize="20"></TextBlock>
+
+            </Grid>
+
+            <Viewbox Grid.Row="0" Grid.Column="1" Height="80" Width="400">
+                <Grid>
+                    <TextBlock x:Name="turn"   HorizontalAlignment="Center"  Text="Tour du joueur noir" Margin="10,10" FontSize="20" FontFamily="Impact"></TextBlock>
+                </Grid>
+            </Viewbox>
+
+            <Border BorderBrush="#6E381E" BorderThickness="1" Grid.Row="1" Grid.Column="1">
+                <Grid Name="gridBoard" Background="#6E381E" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="10*"></ColumnDefinition>
+                        <ColumnDefinition Width="10*"></ColumnDefinition>
+                        <ColumnDefinition Width="10*"></ColumnDefinition>
+                        <ColumnDefinition Width="10*"></ColumnDefinition>
+                        <ColumnDefinition Width="10*"></ColumnDefinition>
+                        <ColumnDefinition Width="10*"></ColumnDefinition>
+                        <ColumnDefinition Width="10*"></ColumnDefinition>
+                        <ColumnDefinition Width="10*"></ColumnDefinition>
+                        <ColumnDefinition Width="10*"></ColumnDefinition>
+                        <ColumnDefinition Width="10*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="10*"></RowDefinition>
+                        <RowDefinition Height="10*"></RowDefinition>
+                        <RowDefinition Height="10*"></RowDefinition>
+                        <RowDefinition Height="10*"></RowDefinition>
+                        <RowDefinition Height="10*"></RowDefinition>
+                        <RowDefinition Height="10*"></RowDefinition>
+                        <RowDefinition Height="10*"></RowDefinition>
+                        <RowDefinition Height="10*"></RowDefinition>
+                        <RowDefinition Height="10*"></RowDefinition>
+                        <RowDefinition Height="10*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </Window>
