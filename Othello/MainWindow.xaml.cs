@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using OthelloIA_G3;
@@ -18,12 +13,15 @@ namespace Othello
         private static string BLANC = "blanc";
         private static string NOIR = "noir";
 
+        private ContextScore contextScore;
         Board board;
         PawnBtn[,] tabPawnBtn;
         bool whiteTurn = false;
         public MainWindow()
         {
             InitializeComponent();
+            contextScore = new ContextScore(0, 0);
+            DataContext = contextScore;
             StartGame();
         }
 
@@ -66,7 +64,8 @@ namespace Othello
                     Close();
                 UpdateUI(true);
             }
-            else { UpdateUI(false); }
+            else
+                UpdateUI(false);
         }
 
         private void UpdateUI(bool final)
@@ -87,8 +86,12 @@ namespace Othello
                 // Recalcule les coups jouables par l'autre joueur
                 UpdateUIBoard();
             }
-            blackScoreText.Text = $"{board.GetBlackScore()}";
-            whiteScoreText.Text = $"{board.GetWhiteScore()}";
+            //blackScoreText.Text = $"{board.GetBlackScore()}";
+            //whiteScoreText.Text = $"{board.GetWhiteScore()}";
+
+            // Binding
+            contextScore.BlackScore = $"{board.GetBlackScore()}";
+            contextScore.WhiteScore = $"{board.GetWhiteScore()}";
         }
 
         private bool UpdateUIBoard()
@@ -134,9 +137,20 @@ namespace Othello
 
                     Border border = new Border
                     {
-                        BorderThickness = new Thickness(0.7),
-                        BorderBrush = Brushes.White
+                        BorderBrush = Brushes.White,
+                        BorderThickness = new Thickness(1, 1, 0, 0)
                     };
+                    if (c == 0)
+                    {
+                        border.BorderThickness = new Thickness(0, 1, 0, 0);
+                        if (l == 0)
+                        {
+                            border.BorderThickness = new Thickness(0, 0, 0, 0);
+                        }
+                    }
+                    else if (l == 0)
+                        border.BorderThickness = new Thickness(1, 0, 0, 0);
+
 
                     Grid grid = new Grid
                     {
