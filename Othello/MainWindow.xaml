@@ -52,24 +52,34 @@
                 <RowDefinition Height="1*"></RowDefinition>
                 <RowDefinition Height="1*"></RowDefinition>
                 <RowDefinition Height="2*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
             </Grid.RowDefinitions>
             <TextBlock Text="Score joueur noir" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="MS Office Symbol Bold" FontSize="18"></TextBlock>
             <Viewbox Grid.Row="1"  Height="Auto" Width="Auto">
                 <Ellipse Height="1" Width="1" Fill="Black"/>
             </Viewbox>
-            <TextBlock Text="{Binding BlackScore}" x:Name="blackScoreText" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Impact" FontSize="60"></TextBlock>
+            <TextBlock Text="{Binding BlackScore}" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Impact" FontSize="60"></TextBlock>
+            <TextBlock Text="Temps de réfléxion" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontFamily="MS Office Symbol Bold" FontSize="18"></TextBlock>
+            <TextBlock Text="{Binding StrTimerBlack}" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="MS Office Symbol Bold" FontSize="20"></TextBlock>
+
         </Grid>
         <Grid Grid.Column="2" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"></RowDefinition>
                 <RowDefinition Height="1*"></RowDefinition>
                 <RowDefinition Height="2*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
             </Grid.RowDefinitions>
             <TextBlock Text="Score joueur blanc" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="MS Office Symbol Bold" FontSize="18"></TextBlock>
             <Viewbox Grid.Row="1"  Height="Auto" Width="Auto">
                 <Ellipse Fill="White" Height="100" Width="100" Stroke="Black"></Ellipse>
             </Viewbox>
-            <TextBlock Text="{Binding WhiteScore}" x:Name="whiteScoreText" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Impact" FontSize="60"></TextBlock>
+            <TextBlock Text="{Binding WhiteScore}" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Impact" FontSize="60"></TextBlock>
+            <TextBlock Text="Temps de réfléxion" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontFamily="MS Office Symbol Bold" FontSize="18"></TextBlock>
+            <TextBlock Text="{Binding StrTimerWhite}" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="MS Office Symbol Bold" FontSize="20"></TextBlock>
+
         </Grid>
 
 

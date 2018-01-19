@@ -13,20 +13,22 @@ namespace Othello
         private static string BLANC = "blanc";
         private static string NOIR = "noir";
 
-        private ContextScore contextScore;
+        private ContextPlayers contextPlayers;
         Board board;
         PawnBtn[,] tabPawnBtn;
         bool whiteTurn = false;
         public MainWindow()
         {
             InitializeComponent();
-            contextScore = new ContextScore(0, 0);
-            DataContext = contextScore;
+            contextPlayers = new ContextPlayers(0, 0);
+            DataContext = contextPlayers;
             StartGame();
         }
 
         private void Pawn_Click(object sender, RoutedEventArgs e)
         {
+            contextPlayers.TimerBlack.Stop();
+            contextPlayers.TimerWhite.Stop();
             PawnBtn pawn = (PawnBtn)sender;
             int c = pawn.C;
             int l = pawn.L;
@@ -46,6 +48,8 @@ namespace Othello
             if (board.IsFinished())
             {
                 // Partie terminée
+                contextPlayers.TimerBlack.Stop();
+                contextPlayers.TimerWhite.Stop();
                 var scoreBlack = board.GetBlackScore();
                 var scoreWhite = board.GetWhiteScore();
                 string winner;
@@ -65,7 +69,13 @@ namespace Othello
                 UpdateUI(true);
             }
             else
+            {
                 UpdateUI(false);
+                if (whiteTurn)
+                    contextPlayers.TimerWhite.Start();
+                else
+                    contextPlayers.TimerBlack.Start();
+            }
         }
 
         private void UpdateUI(bool final)
@@ -90,8 +100,8 @@ namespace Othello
             //whiteScoreText.Text = $"{board.GetWhiteScore()}";
 
             // Binding
-            contextScore.BlackScore = $"{board.GetBlackScore()}";
-            contextScore.WhiteScore = $"{board.GetWhiteScore()}";
+            contextPlayers.BlackScore = $"{board.GetBlackScore()}";
+            contextPlayers.WhiteScore = $"{board.GetWhiteScore()}";
         }
 
         private bool UpdateUIBoard()
