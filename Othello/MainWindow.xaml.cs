@@ -27,8 +27,6 @@ namespace Othello
             StartGame();
         }
 
-
-
         private void Pawn_Click(object sender, RoutedEventArgs e)
         {
             PawnBtn pawn = (PawnBtn)sender;
@@ -40,8 +38,6 @@ namespace Othello
                 // Coup joué
                 pawn.Val = board.GetBoard()[c, l];
                 whiteTurn = !whiteTurn;
-                UpdateUIBoard();
-                // TODO Check if next player should pass.
             }
             else
             {
@@ -68,28 +64,53 @@ namespace Othello
                 else
                     // Ferme l'application
                     Close();
+                UpdateUI(true);
             }
+            else { UpdateUI(false); }
         }
 
-        private void UpdateUIBoard()
+        private void UpdateUI(bool final)
+        {
+            bool shouldPass = UpdateUIBoard();
+
+            string whoPass = null;
+            if (shouldPass && !final)
+            {
+                whoPass = whiteTurn ? BLANC : NOIR;
+                whiteTurn = !whiteTurn;
+            }
+            var whosPlaying = whiteTurn ? BLANC : NOIR;
+            turn.Text = $"Tour du joueur {whosPlaying}";
+            if (shouldPass && !final)
+            {
+                turn.Text += $"\nJoueur {whoPass} a passé son tour";
+                // Recalcule les coups jouables par l'autre joueur
+                UpdateUIBoard();
+            }
+            blackScoreText.Text = $"{board.GetBlackScore()}";
+            whiteScoreText.Text = $"{board.GetWhiteScore()}";
+        }
+
+        private bool UpdateUIBoard()
         {
             var tabBoard = board.GetBoard();
+            bool shouldPass = true;
             for (int c = 0; c < 8; c++)
             {
                 for (int l = 0; l < 8; l++)
                 {
                     if (board.IsPlayable(c, l, whiteTurn))
+                    {
                         tabPawnBtn[c, l].IsPlayable = whiteTurn ? 0 : 1;
+                        shouldPass = false;
+                    }
                     else
                         tabPawnBtn[c, l].IsPlayable = -1;
 
                     tabPawnBtn[c, l].Val = tabBoard[c, l];
                 }
             }
-            var whosPlaying = whiteTurn ? BLANC : NOIR;
-            turn.Text = $"Tour du joueur {whosPlaying}";
-            blackScoreText.Text = $"{board.GetBlackScore()}";
-            whiteScoreText.Text = $"{board.GetWhiteScore()}";
+            return shouldPass;
         }
 
         private void StartGame()
@@ -136,7 +157,7 @@ namespace Othello
                 }
             }
             AddHeader();
-            UpdateUIBoard();
+            UpdateUI(false);
         }
         private void AddHeader()
         {

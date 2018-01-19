@@ -9,7 +9,6 @@
 
     <Window.Resources>
         <Style TargetType="{x:Type Button}" x:Key="pawnStyle">
-            <!--<Setter Property="OverridesDefaultStyle" Value="True"/>-->
             <Setter Property="BorderBrush" Value="White"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -20,14 +19,6 @@
                             Background="Transparent">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
-                        <!--<Grid>
-                            <Ellipse Name="EllipsePl1" Margin="3" Width="Auto" Height="Auto" >
-                                <Ellipse.Fill>
-                                    <SolidColorBrush Color="White"/>
-                                </Ellipse.Fill>
-                            </Ellipse>
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Grid>-->
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Foreground" Value="Red"/>
@@ -62,9 +53,9 @@
                 <RowDefinition Height="1*"></RowDefinition>
                 <RowDefinition Height="2*"></RowDefinition>
             </Grid.RowDefinitions>
-            <TextBlock Text="Score joueur noir" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Impact" FontSize="16"></TextBlock>
+            <TextBlock Text="Score joueur noir" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="MS Office Symbol Bold" FontSize="18"></TextBlock>
             <Viewbox Grid.Row="1"  Height="Auto" Width="Auto">
-                <Ellipse Height="100" Width="100" Fill="Black"/>
+                <Ellipse Height="1" Width="1" Fill="Black"/>
             </Viewbox>
             <TextBlock x:Name="blackScoreText" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Impact" FontSize="60"></TextBlock>
         </Grid>
@@ -74,7 +65,7 @@
                 <RowDefinition Height="1*"></RowDefinition>
                 <RowDefinition Height="2*"></RowDefinition>
             </Grid.RowDefinitions>
-            <TextBlock Text="Score joueur blanc" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Impact" FontSize="16"></TextBlock>
+            <TextBlock Text="Score joueur blanc" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="MS Office Symbol Bold" FontSize="18"></TextBlock>
             <Viewbox Grid.Row="1"  Height="Auto" Width="Auto">
                 <Ellipse Fill="White" Height="100" Width="100" Stroke="Black"></Ellipse>
             </Viewbox>
@@ -82,7 +73,7 @@
         </Grid>
 
 
-        <TextBlock x:Name="turn" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="1" Text="Tour du joueur noir" Margin="0,10" FontSize="22" FontFamily="Impact"></TextBlock>
+        <TextBlock x:Name="turn" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="1" Text="Tour du joueur noir" Margin="0,10" FontSize="24" FontFamily="Impact"></TextBlock>
         <Border BorderBrush="#6E381E" BorderThickness="1" Grid.Row="1" Grid.Column="1">
             <Grid Name="gridBoard" Background="#6E381E" >
                 <Grid.ColumnDefinitions>
