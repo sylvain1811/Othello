@@ -1,6 +1,9 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Microsoft.Win32;
 using OthelloIA_G3;
 
 namespace Othello
@@ -232,6 +235,88 @@ namespace Othello
         private void MenuItemNewGame_Click(object sender, RoutedEventArgs e)
         {
             StartGame();
+        }
+
+        private void MenuItemRules_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://www.ffothello.org/othello/regles-du-jeu/");
+        }
+
+        private void MenuItemSave_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                RestoreDirectory = true,
+                Filter = "All files(*.*)|*.*"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                Game game = new Game(board.GetBoard(), whiteTurn, contextPlayers.ElapsedWhite, contextPlayers.ElapsedBlack);
+                BinaryFormatter formatter = new BinaryFormatter();
+                Stream stream = null;
+
+                try
+                {
+                    //stream = new FileStream(, FileMode.Create, FileAccess.Write);
+                    stream = saveFileDialog.OpenFile();
+                    formatter.Serialize(stream, game);
+                    stream.Flush();
+                }
+                catch { }
+                finally
+                {
+                    if (stream != null)
+                        stream.Close();
+                }
+            }
+
+
+            // string path = "data.bin";
+
+        }
+
+        private void MenuItemLoad_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog()
+            {
+                RestoreDirectory = true,
+                Filter = "All files(*.*)|*.*"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                //string path = "data.bin";
+                BinaryFormatter formatter = new BinaryFormatter();
+                Stream stream = null;
+
+                if ((stream = openFileDialog.OpenFile()) != null)
+                {
+                    try
+                    {
+                        //stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+                        Game game = (Game)formatter.Deserialize(stream);
+                        //contextPlayers = game.ContextPlayers;
+                        board = new Board(game.Board);
+                        whiteTurn = game.WhiteTurn;
+                        UpdateUI(false);
+                        contextPlayers.ElapsedBlack = game.ElapsedBlack;
+                        contextPlayers.ElapsedWhite = game.ElapsedWhite;
+                    }
+                    catch
+                    {
+                        MessageBox.Show(
+                            "Un problème est survenu lors du chargement de la partie, aucun chargement n'a été effectué.",
+                            "Erreur de chargement", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    finally
+                    {
+                        if (stream != null)
+                            stream.Close();
+                    }
+                }
+            }
+
         }
     }
 }

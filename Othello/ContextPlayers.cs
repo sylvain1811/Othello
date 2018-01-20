@@ -1,14 +1,33 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Timers;
 
 namespace Othello
 {
     class ContextPlayers : INotifyPropertyChanged
     {
-        public Timer TimerWhite { get; }
-        public Timer TimerBlack { get; }
+        public Timer TimerWhite { get; set; }
+        public Timer TimerBlack { get; set; }
         private int elapsedWhite;
         private int elapsedBlack;
+        public int ElapsedWhite
+        {
+            get { return elapsedWhite; }
+            set
+            {
+                elapsedWhite = value;
+                StrTimerWhite = $"{value} s";
+            }
+        }
+        public int ElapsedBlack
+        {
+            get { return elapsedBlack; }
+            set
+            {
+                elapsedBlack = value;
+                StrTimerBlack = $"{value} s";
+            }
+        }
         private string strTimerWhite;
         private string strTimerBlack;
         public string StrTimerWhite
@@ -54,8 +73,8 @@ namespace Othello
         {
             BlackScore = "" + b;
             WhiteScore = "" + w;
-            elapsedWhite = 0;
-            elapsedBlack = 0;
+            ElapsedWhite = 0;
+            ElapsedBlack = 0;
             StrTimerBlack = "0 s";
             strTimerWhite = "0 s";
 
