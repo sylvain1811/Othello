@@ -61,11 +61,21 @@ namespace OthelloIA_G3
             maxPlayerCoin = isWhite ? board.GetWhiteScore() : board.GetBlackScore();
             minPlayerCoin = isWhite ? board.GetBlackScore() : board.GetWhiteScore();
 
+<<<<<<< HEAD
             //Retourne une valeur entre -100 et 100 du rapport du nombre de pion à maximiser sur le total des deux joueurs
             if (maxPlayerCoin > minPlayerCoin){ 
                 coinParity = (100 * maxPlayerCoin)/(maxPlayerCoin + minPlayerCoin);
             }else{
                 coinParity = -(100 * maxPlayerCoin)/(maxPlayerCoin + minPlayerCoin);
+=======
+            if (maxPlayerCoin > minPlayerCoin)
+            {
+                coinParity = (100 * maxPlayerCoin) / (maxPlayerCoin + minPlayerCoin);
+            }
+            else
+            {
+                coinParity = -(100 * maxPlayerCoin) / (maxPlayerCoin + minPlayerCoin);
+>>>>>>> b025851f00df6d53333721f537a01e35e0e5b7ff
             }
 
             //Nombre de coups possibles des blancs et des noirs
@@ -76,13 +86,21 @@ namespace OthelloIA_G3
             maxPlayerMove = isWhite ? nbrOfPlayableMoveWhite : nbrOfPlayableMoveBlack;
             minPlayerMove = isWhite ? nbrOfPlayableMoveBlack : nbrOfPlayableMoveWhite;
 
+<<<<<<< HEAD
             //Retourne une valeur entre -100 et 100 du rapport du nombre de coups à maximiser sur le total des deux joueurs
             if (maxPlayerMove > minPlayerMove){
+=======
+            if (maxPlayerMove > minPlayerMove)
+            {
+>>>>>>> b025851f00df6d53333721f537a01e35e0e5b7ff
                 mobility = (100 * maxPlayerMove) / (maxPlayerMove + minPlayerMove);
-            }else if (maxPlayerMove < minPlayerMove){
+            }
+            else if (maxPlayerMove < minPlayerMove)
+            {
                 mobility = -(100 * maxPlayerMove) / (maxPlayerMove + minPlayerMove);
             }
 
+<<<<<<< HEAD
             //Retourne une valeur en fonction des pions posés sur le damier
             whiteCorners = EvaluateMatriceValue(mat_corner_weight, true);
             blackCorners = EvaluateMatriceValue(mat_corner_weight, false);
@@ -115,6 +133,11 @@ namespace OthelloIA_G3
 
             //Retourne ces dernières valeurs avec des coéfficients selon leur importance
             return 2*coinParity + 5*mobility + 10 *corners + 15 * stability;
+=======
+            corners = GetCornerValue(mat_eval);
+
+            return 2 * coinParity + 5 * mobility + 10 * corners;
+>>>>>>> b025851f00df6d53333721f537a01e35e0e5b7ff
         }
 
         private int EvaluateMatriceValue(int[,] mat_eval, bool white)
@@ -122,10 +145,20 @@ namespace OthelloIA_G3
             int typeCoin = white ? 0 : 1;
             int value = 0;
 
+<<<<<<< HEAD
             for (int c = 0; c < 8; c++){
                 for (int l = 0; l < 8; l++){
                     if (board.GetBoard()[c,l] == typeCoin){
                         value += board.GetBoard()[c, l];
+=======
+            for (int c = 0; c < 8; c++)
+            {
+                for (int l = 0; l < 8; l++)
+                {
+                    if (board.GetBoard()[c, l] == typeCoin)
+                    {
+                        cornerValue += board.GetBoard()[c, l];
+>>>>>>> b025851f00df6d53333721f537a01e35e0e5b7ff
                     }
                 }
             }
