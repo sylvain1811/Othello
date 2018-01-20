@@ -6,26 +6,32 @@ namespace Othello
 {
     class ContextPlayers : INotifyPropertyChanged
     {
-        public Timer TimerWhite { get; set; }
-        public Timer TimerBlack { get; set; }
+        public Timer Timer { get; set; }
+        public bool WhiteTurn { get; set; }
+
         private int elapsedWhite;
-        private int elapsedBlack;
         public int ElapsedWhite
         {
             get { return elapsedWhite; }
             set
             {
                 elapsedWhite = value;
-                StrTimerWhite = $"{value} s";
+                // Affichage en minutes secondes
+                TimeSpan timeSpan = TimeSpan.FromSeconds(value / 10);
+                StrTimerWhite = string.Format("{0:D2}m:{1:D2}s", timeSpan.Minutes, timeSpan.Seconds);
             }
         }
+
+        private int elapsedBlack;
         public int ElapsedBlack
         {
             get { return elapsedBlack; }
             set
             {
                 elapsedBlack = value;
-                StrTimerBlack = $"{value} s";
+                // Affichage en minutes secondes
+                TimeSpan timeSpan = TimeSpan.FromSeconds(value / 10);
+                StrTimerBlack = string.Format("{0:D2}m:{1:D2}s", timeSpan.Minutes, timeSpan.Seconds);
             }
         }
         private string strTimerWhite;
@@ -36,6 +42,7 @@ namespace Othello
             set
             {
                 strTimerWhite = value;
+                // Signale que la propriété a changée
                 NotifyPropertyChanged("StrTimerWhite");
             }
         }
@@ -45,6 +52,7 @@ namespace Othello
             set
             {
                 strTimerBlack = value;
+                // Signale que la propriété a changée
                 NotifyPropertyChanged("StrTimerBlack");
             }
         }
@@ -55,6 +63,7 @@ namespace Othello
             set
             {
                 whiteScore = value;
+                // Signale que la propriété a changée
                 NotifyPropertyChanged("WhiteScore");
             }
         }
@@ -65,40 +74,34 @@ namespace Othello
             set
             {
                 blackScore = value;
+                // Signale que la propriété a changée
                 NotifyPropertyChanged("BlackScore");
             }
         }
 
-        public ContextPlayers(int w, int b)
+        public ContextPlayers(int whiteScore, int blackScore)
         {
-            BlackScore = "" + b;
-            WhiteScore = "" + w;
+            BlackScore = "" + blackScore;
+            WhiteScore = "" + whiteScore;
             ElapsedWhite = 0;
             ElapsedBlack = 0;
-            StrTimerBlack = "0 s";
-            strTimerWhite = "0 s";
 
-            TimerBlack = new Timer
+            Timer = new Timer
             {
-                Interval = 1000
+                Interval = 100 // 100ms
             };
-            TimerBlack.Elapsed += TimerBlack_Elapsed;
-
-            TimerWhite = new Timer
-            {
-                Interval = 1000
-            };
-            TimerWhite.Elapsed += TimerWhite_Elapsed;
+            Timer.Elapsed += Timer_Elapsed;
         }
 
-        private void TimerBlack_Elapsed(object sender, ElapsedEventArgs e)
+        /// <summary>
+        /// Incrémentation du temps de réfléxion d'un joueur. Mise à jour automatique de la GUI par binding.
+        /// </summary>
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            StrTimerBlack = $"{ elapsedBlack++} s";
-        }
-
-        private void TimerWhite_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            StrTimerWhite = $"{ elapsedWhite++} s";
+            if (WhiteTurn)
+                ElapsedWhite++;
+            else
+                ElapsedBlack++;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

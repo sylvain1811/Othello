@@ -7,17 +7,16 @@ using System.Threading.Tasks;
 namespace Othello
 {
     [Serializable]
+    // Classe sérialisable contenant les données essentielles d'une partie en cours.
     class Game
     {
-        //public ContextPlayers ContextPlayers { get; set; }
         public int ElapsedWhite { get; set; }
         public int ElapsedBlack { get; set; }
         public int[,] Board { get; set; }
         public bool WhiteTurn { get; set; }
 
-        public Game(/*ContextPlayers contextPlayers, */int[,] board, bool whiteTurn, int elapsedWhite, int elapsedBlack)
+        public Game(int[,] board, bool whiteTurn, int elapsedWhite, int elapsedBlack)
         {
-            // ContextPlayers = contextPlayers;
             Board = board;
             WhiteTurn = whiteTurn;
             ElapsedBlack = elapsedBlack;
