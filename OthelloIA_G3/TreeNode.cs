@@ -28,58 +28,109 @@ namespace OthelloIA_G3
         /// <returns></returns>
         public double Eval()
         {
-            int maxPlayerCoin, minPlayerCoin, maxPlayerMove, minPlayerMove, coinParity, mobility, corners;
-            maxPlayerCoin = minPlayerCoin = maxPlayerMove = minPlayerMove = coinParity = mobility = corners = 0;
+            //Initialisation des variables
+            int maxPlayerCoin, minPlayerCoin, maxPlayerMove, minPlayerMove, coinParity,
+            mobility, whiteCorners, blackCorners, whiteStability, blackStability,
+            maxCorners, minCorners, corners, maxStability, minStability, stability;
 
-            int[,] mat_eval = new int[,] {{20, -10, 1, 1, 1, 1, -10, 20},
-                                          {-10, -7, 1, 1, 1, 1, -7, -10},
-                                              {1, 1, 1, 1, 1, 1, 1, 1},
-                                              {1, 1, 1, 1, 1, 1, 1, 1},
-                                              {1, 1, 1, 1, 1, 1, 1, 1},
-                                              {1, 1, 1, 1, 1, 1, 1, 1},
-                                          {-10, -7, 1, 1, 1, 1, -7, -10},
-                                          {20, -10, 1, 1, 1, 1, -10, 20}};
+            maxPlayerCoin = minPlayerCoin = maxPlayerMove = minPlayerMove = coinParity = 
+            mobility = whiteCorners = blackCorners = whiteStability = blackStability =
+            maxCorners = minCorners = corners = maxStability = minStability = stability = 0;
 
+            //Initialisation de la matrice de valeurs pour valoriser les coins. 
+            int[,] mat_corner_weight = new int[,] {{20, -10, 1, 1, 1, 1, -10, 20},
+                                                 {-10, -7, 1, 1, 1, 1, -7, -10},
+                                                 {1, 1, 1, 1, 1, 1, 1, 1},
+                                                 {1, 1, 1, 1, 1, 1, 1, 1},
+                                                 {1, 1, 1, 1, 1, 1, 1, 1},
+                                                 {1, 1, 1, 1, 1, 1, 1, 1},
+                                                 {-10, -7, 1, 1, 1, 1, -7, -10},
+                                                 {20, -10, 1, 1, 1, 1, -10, 20}};
+
+            int[,] mat_stability_weight = new int[,] { {4, -3, 2, 2, 2, 2, -3, 4},
+                                                     {-3, -4, -1, -1, -1, -1, -4, -3}, 
+                                                     {2, -1, 1, 0, 0, 1, -1, 2},
+                                                     {2,  -1,  0,  1,  1,  0, -1,  2}, 
+                                                     {2,  -1,  0,  1,  1,  0, -1,  2 }, 
+                                                     {2,  -1,  1,  0,  0,  1, -1,  2}, 
+                                                     {-3, -4, -1, -1, -1, -1, -4, -3}, 
+                                                     {4,  -3,  2,  2,  2,  2, -3,  4}};
+
+
+            //Récupère le nombre de pions des joueurs à maximiser et à minimiser
             maxPlayerCoin = isWhite ? board.GetWhiteScore() : board.GetBlackScore();
             minPlayerCoin = isWhite ? board.GetBlackScore() : board.GetWhiteScore();
 
-            if (maxPlayerCoin > minPlayerCoin){
+            //Retourne une valeur entre -100 et 100 du rapport du nombre de pion à maximiser sur le total des deux joueurs
+            if (maxPlayerCoin > minPlayerCoin){ 
                 coinParity = (100 * maxPlayerCoin)/(maxPlayerCoin + minPlayerCoin);
             }else{
-                coinParity = -(100 * maxPlayerCoin) / (maxPlayerCoin + minPlayerCoin);
+                coinParity = -(100 * maxPlayerCoin)/(maxPlayerCoin + minPlayerCoin);
             }
 
+            //Nombre de coups possibles des blancs et des noirs
             int nbrOfPlayableMoveWhite = Ops(isWhite).Count;
             int nbrOfPlayableMoveBlack = Ops(isWhite).Count;
 
+            //Assigne le nombre de coups en fonction de qui maximiser/minimiser
             maxPlayerMove = isWhite ? nbrOfPlayableMoveWhite : nbrOfPlayableMoveBlack;
             minPlayerMove = isWhite ? nbrOfPlayableMoveBlack : nbrOfPlayableMoveWhite;
 
+            //Retourne une valeur entre -100 et 100 du rapport du nombre de coups à maximiser sur le total des deux joueurs
             if (maxPlayerMove > minPlayerMove){
                 mobility = (100 * maxPlayerMove) / (maxPlayerMove + minPlayerMove);
             }else if (maxPlayerMove < minPlayerMove){
                 mobility = -(100 * maxPlayerMove) / (maxPlayerMove + minPlayerMove);
             }
 
-            corners = GetCornerValue(mat_eval);
-            
-            return 2*coinParity + 5*mobility + 10*corners;
+            //Retourne une valeur en fonction des pions posés sur le damier
+            whiteCorners = EvaluateMatriceValue(mat_corner_weight, true);
+            blackCorners = EvaluateMatriceValue(mat_corner_weight, false);
+
+            //Détermine quel poids de case est adressé au joueur à maximiser
+            maxCorners = isWhite ? whiteCorners : blackCorners;
+            minCorners = isWhite ? blackCorners : whiteCorners;
+
+            //Retourne une valeur entre -100 et 100 du rapport du poids des cases à maximiser sur le total des deux joueurs
+            if (maxCorners > minCorners){
+                corners = (100 * maxCorners) / (maxCorners + minCorners);
+            }else if (maxCorners < minCorners){
+                corners = -(100 * maxCorners) / (maxCorners + minCorners);
+            }
+
+            //Retourne une valeur en fonction de la stabilité des pions placés sur le damier
+            whiteStability = EvaluateMatriceValue(mat_stability_weight, true);
+            blackStability = EvaluateMatriceValue(mat_stability_weight, false);
+
+            //Détermine quelle stabilité est adressé au joueur à maximiser
+            maxStability = isWhite ? whiteStability : blackStability;
+            minStability = isWhite ? blackStability : whiteStability;
+
+            //Retourne une valeur entre -100 et 100 du rapport de stabilité à maximiser sur le total des deux joueurs
+            if(maxStability > minStability){
+                stability = (100 * maxStability) / (maxStability + minStability);
+            }else if (maxStability < minStability){
+                stability = -(100 * maxStability) / (maxStability + minStability);
+            }
+
+            //Retourne ces dernières valeurs avec des coéfficients selon leur importance
+            return 2*coinParity + 5*mobility + 10 *corners + 15 * stability;
         }
 
-        private int GetCornerValue(int[,] mat_eval)
+        private int EvaluateMatriceValue(int[,] mat_eval, bool white)
         {
-            int typeCoin = isWhite ? 0 : 1;
-            int cornerValue = 0;
+            int typeCoin = white ? 0 : 1;
+            int value = 0;
 
             for (int c = 0; c < 8; c++){
                 for (int l = 0; l < 8; l++){
                     if (board.GetBoard()[c,l] == typeCoin){
-                        cornerValue += board.GetBoard()[c, l];
+                        value += board.GetBoard()[c, l];
                     }
                 }
             }
 
-            return cornerValue;
+            return value;
         }
 
         public static bool Final(Board board)
