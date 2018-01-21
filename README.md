@@ -48,7 +48,7 @@ if (maxPlayerCoin > minPlayerCoin){
 ```
 Le second critère est celui de la mobilité, il y a deux type de mobilité dans le cas du jeu Othello. La mobilité actuel qui correspond aux nombre de coups possibles à un instant t du jeu. Et la mobilité potentielle qui elle correspond aux nombres de coup qui seront possibles. Nous utiliserons, nous, une légère variante qui fait le rapport du nombre de coups possibles à joueur pour le joueur à maximiser par le nombre de coups possibles à jouer des deux joueurs. Ce rapport, comme le précédent retourne une valeur entre -100 et 100. 
 
-Le troisième critère fait certainement parti des critères les plus important. Il donne un poids arbitraire mais stratégique à chacune des cases du damier. Plus le poids de la case est grande, plus on souhaiterais se diriger vers l'une de ces cases pour y poser notre pion. Ces cases sont les coins, car une fois qu'un de nos pions est posé sur un coin, il ne pourra plus jamais être retourné. C'est pour cela que les cases autour des coins ne sont pas spécialement des cases où nous aimerions poser nos pions car ils seront rapidement retourner et donneront un chemin aux coins. Afin de donner un poids à nos cases, nous utiliserons une matrice comme ci-dessous.
+Le troisième critère fait certainement parti des critères les plus important. Il donne un poids arbitraire mais stratégique à chacune des cases du damier. Plus le poids de la case est grande, plus on souhaiterais se diriger vers l'une de ces cases pour y poser notre pion. Ces cases sont les coins, car une fois qu'un de nos pions est posé sur un coin, il ne pourra plus jamais être retourné. Puis les coins apporte également un très grand avantage au joueur car il pourra se construitre autour de son coin et donc poser des pions qui seront stable. C'est pour cela que les cases autour des coins ne sont pas spécialement des cases où nous aimerions poser nos pions car ils seront rapidement retourner et donneront un chemin aux coins. Afin de donner un poids à nos cases, nous utiliserons une matrice comme ci-dessous.
 
 ```c#
 //Initialisation de la matrice de valeurs pour valoriser les coins. 
@@ -64,7 +64,28 @@ int[,] mat_corner_weight = new int[,] {{20, -10, 1, 1, 1, 1, -10, 20},
 
 On additionne la valeur des cases de cette matrice si un de nos pions se trouve sur la case correspondante. On calcul ces sommes pour les deux joueurs afin d'en suite également créer un même rapport que les deux derniers critères. 
 
-Pour finir, 
+Pour finir, nous allons parler de la stabilité qui est un des grands aspects du jeu Othello car c'est ce critère qui indique d'un pion s'il sera retourné au fil de la partie ou non. Il existe donc trois types de stabilité... (i) stable --> ce pion ne sera plus jamais retourné ! ex.: les coins (ii) semi-stable --> il est possible que ce pion soit retourné au fil de la partie (iii) instable --> ce pion peut être retourné à l'instant même ou l'adversaire va jouer.
+De ce fait, on aimerait indiquer quelles cases sont stables et lesquelles le sont moins. Pour cela, on utilise à nouveau une matrice qui ressemblera à celle utilisée pour les coins.
+
+```c#
+int[,] mat_stability_weight = new int[,] { {4, -3, 2, 2, 2, 2, -3, 4},
+                                           {-3, -4, -1, -1, -1, -1, -4, -3}, 
+                                           {2, -1, 1, 0, 0, 1, -1, 2},
+                                           {2,  -1,  0,  1,  1,  0, -1,  2}, 
+                                           {2,  -1,  0,  1,  1,  0, -1,  2 }, 
+                                           {2,  -1,  1,  0,  0,  1, -1,  2}, 
+                                           {-3, -4, -1, -1, -1, -1, -4, -3}, 
+                                           {4,  -3,  2,  2,  2,  2, -3,  4}};
+```
+
+Comme pour les trois deniers critères heuristiques, on en ressort un rapport qui permet d'avoir une sorte de poids égalitaire avec les autres. Seulement, ces quatres critères n'ont pas la même importance ! Au contraire ! 
+La stabilité et les coins capturés sont sans équivoque plus importants que les autres. C'est pour cela, que nous allons leur donner un poid au moment où il faudra retourner un nombre pour évaluer notre coup.
+
+Voici les poids que nous avons adressés à ces critères : 
+
+```c#
+return 2*coinParity + 5*mobility + 10 *corners + 15 * stability;
+```
 
 ## Sources
 
