@@ -113,3 +113,7 @@ return 2 * coinParity + 5 * mobility + 10 * corners + 15 * stability;
 
 https://kartikkukreja.wordpress.com/2013/03/30/heuristic-function-for-reversiothello/
 https://courses.cs.washington.edu/courses/cse573/04au/Project/mini1/RUSSIA/Final_Paper.pdf
+
+## Auteurs
+- [Costa Pedro](https://github.com/PedroEmanuelCosta2)
+- [Renaud Sylvain](https://github.com/sylvain1811)
