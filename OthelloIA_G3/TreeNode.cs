@@ -83,8 +83,8 @@ namespace OthelloIA_G3
             }
 
             //Nombre de coups possibles des blancs et des noirs
-            int nbrOfPlayableMoveWhite = Ops(isWhite).Count;
-            int nbrOfPlayableMoveBlack = Ops(isWhite).Count;
+            int nbrOfPlayableMoveWhite = Ops(true).Count;
+            int nbrOfPlayableMoveBlack = Ops(false).Count;
 
             //Assigne le nombre de coups en fonction de qui maximiser/minimiser
             maxPlayerMove = isWhite ? nbrOfPlayableMoveWhite : nbrOfPlayableMoveBlack;
