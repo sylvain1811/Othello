@@ -17,7 +17,19 @@ Ces fonctions seront revues avec quelques explications et commentaires dans les 
 
 ## Implementation IA
 
-### Fonction CheckOrPlay
+### Structure de la classe Board
+
+Les fonctions importantes de cette classe sont 
+``` c# 
+private bool CheckOrPlay(int column, int line, bool isWhite, bool checkOnly) 
+```
+et 
+``` c# 
+private Tuple<double, Cell> AlphaBeta(TreeNode root, int level, bool isWhite, int minOrMax, double parentValue)
+```
+à elles deux, elles permettent d'instorer les règles du jeu Othello et de définir quel coup sera jouer au prochain tour. CheckOrPlay est une fonction générique qui permet de tester si un coup est jouable ou d'alors jouer ce coup en retournant tous les pions nécessaires. Elle sera appelée par les fonctions ``` IsPlayable(int column, int line, bool isWhite) ``` et ``` PlayMove(int column, int line, bool isWhite) ``` qui, comme il vient d'être expliqué permettent d'exploiter les deux utilités de la fonction CheckOrPlay. 
+
+La fonction AlphaBeta est l'amélioration algorithmique du célèbre MinMax. Lorsqu'on sait que cela ne sert à rien de parcourir une branche de l'arbre car aucune valeur plus bas ne pourra faire changer celle du parent, alors on coupe le parcourt où l'on se trouve. De cette manière, on optimise l'algorithme en ne faisant pas des parcours qui ne sont pas nécessaires. Dans notre cas, la fonction AlphaBeta va retourner une case qu'il aura jugé être le meilleur coup à faire après avoir consulté la fonction d'évaluation.
 
 ### Fonction Eval
 
