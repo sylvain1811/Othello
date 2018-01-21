@@ -78,8 +78,8 @@ namespace OthelloIA_G3
             //Retourne une valeur entre -100 et 100 du rapport du nombre de pion à maximiser sur le total des deux joueurs
             if (maxPlayerCoin > minPlayerCoin){ 
                 coinParity = (100 * maxPlayerCoin)/(maxPlayerCoin + minPlayerCoin);
-            }else{
-                coinParity = -(100 * maxPlayerCoin)/(maxPlayerCoin + minPlayerCoin);
+            }else if (maxPlayerCoin < minPlayerCoin){
+                coinParity = -(100 * minPlayerCoin)/(maxPlayerCoin + minPlayerCoin);
             }
 
             //Nombre de coups possibles des blancs et des noirs
@@ -94,7 +94,7 @@ namespace OthelloIA_G3
             if (maxPlayerMove > minPlayerMove){
                 mobility = (100 * maxPlayerMove) / (maxPlayerMove + minPlayerMove);
             }else if (maxPlayerMove < minPlayerMove){
-                mobility = -(100 * maxPlayerMove) / (maxPlayerMove + minPlayerMove);
+                mobility = -(100 * minPlayerMove) / (maxPlayerMove + minPlayerMove);
             }
 
             //Retourne une valeur en fonction des pions posés sur le damier
@@ -109,7 +109,7 @@ namespace OthelloIA_G3
             if (maxCorners > minCorners){
                 corners = (100 * maxCorners) / (maxCorners + minCorners);
             }else if (maxCorners < minCorners){
-                corners = -(100 * maxCorners) / (maxCorners + minCorners);
+                corners = -(100 * minCorners) / (maxCorners + minCorners);
             }
 
             //Retourne une valeur en fonction de la stabilité des pions placés sur le damier
@@ -124,7 +124,7 @@ namespace OthelloIA_G3
             if(maxStability > minStability){
                 stability = (100 * maxStability) / (maxStability + minStability);
             }else if (maxStability < minStability){
-                stability = -(100 * maxStability) / (maxStability + minStability);
+                stability = -(100 * minStability) / (maxStability + minStability);
             }
 
             //Retourne ces dernières valeurs avec des coéfficients selon leur importance
