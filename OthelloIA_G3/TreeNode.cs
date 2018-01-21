@@ -15,6 +15,12 @@ namespace OthelloIA_G3
         private Board board;
         private bool isWhite;
 
+        /// <summary>
+        /// Constructeur de TreeNode
+        /// </summary>
+        /// <param name="board">Board.</param>
+        /// <param name="type">Type.</param>
+        /// <param name="isWhite">If set to <c>true</c> is white.</param>
         public TreeNode(Board board, EType type, bool isWhite)
         {
             this.board = new Board(board);
@@ -23,16 +29,20 @@ namespace OthelloIA_G3
         }
 
         /// <summary>
-        /// Evaluation du board.
+        /// Evaluation du board avec plusieurs coefficients heuristiques.
+        /// Ces coefficients sont déterminés selon des techniques permettant
+        /// d'indiquer quels facteurs de jeu garanti un meilleur 
+        /// pourcentage de réussite.
         /// </summary>
         /// <returns></returns>
         public double Eval()
         {
-            //Initialisation des variables
+            //Déclaration des variables
             int maxPlayerCoin, minPlayerCoin, maxPlayerMove, minPlayerMove, coinParity,
             mobility, whiteCorners, blackCorners, whiteStability, blackStability,
             maxCorners, minCorners, corners, maxStability, minStability, stability;
 
+            //Initialisation des variables
             maxPlayerCoin = minPlayerCoin = maxPlayerMove = minPlayerMove = coinParity = 
             mobility = whiteCorners = blackCorners = whiteStability = blackStability =
             maxCorners = minCorners = corners = maxStability = minStability = stability = 0;
@@ -47,6 +57,10 @@ namespace OthelloIA_G3
                                                  {-10, -7, 1, 1, 1, 1, -7, -10},
                                                  {20, -10, 1, 1, 1, 1, -10, 20}};
 
+            //Initialiation de la matrice de stabilité
+            //La stabilité est définie en fonction du fait qu'un pion pourra être
+            //retourné dans le tour même, dans un des tours à venir ou qu'il soit
+            //impossible à être retourné. 
             int[,] mat_stability_weight = new int[,] { {4, -3, 2, 2, 2, 2, -3, 4},
                                                      {-3, -4, -1, -1, -1, -1, -4, -3}, 
                                                      {2, -1, 1, 0, 0, 1, -1, 2},
@@ -61,21 +75,11 @@ namespace OthelloIA_G3
             maxPlayerCoin = isWhite ? board.GetWhiteScore() : board.GetBlackScore();
             minPlayerCoin = isWhite ? board.GetBlackScore() : board.GetWhiteScore();
 
-<<<<<<< HEAD
             //Retourne une valeur entre -100 et 100 du rapport du nombre de pion à maximiser sur le total des deux joueurs
             if (maxPlayerCoin > minPlayerCoin){ 
                 coinParity = (100 * maxPlayerCoin)/(maxPlayerCoin + minPlayerCoin);
             }else{
                 coinParity = -(100 * maxPlayerCoin)/(maxPlayerCoin + minPlayerCoin);
-=======
-            if (maxPlayerCoin > minPlayerCoin)
-            {
-                coinParity = (100 * maxPlayerCoin) / (maxPlayerCoin + minPlayerCoin);
-            }
-            else
-            {
-                coinParity = -(100 * maxPlayerCoin) / (maxPlayerCoin + minPlayerCoin);
->>>>>>> b025851f00df6d53333721f537a01e35e0e5b7ff
             }
 
             //Nombre de coups possibles des blancs et des noirs
@@ -86,21 +90,13 @@ namespace OthelloIA_G3
             maxPlayerMove = isWhite ? nbrOfPlayableMoveWhite : nbrOfPlayableMoveBlack;
             minPlayerMove = isWhite ? nbrOfPlayableMoveBlack : nbrOfPlayableMoveWhite;
 
-<<<<<<< HEAD
             //Retourne une valeur entre -100 et 100 du rapport du nombre de coups à maximiser sur le total des deux joueurs
             if (maxPlayerMove > minPlayerMove){
-=======
-            if (maxPlayerMove > minPlayerMove)
-            {
->>>>>>> b025851f00df6d53333721f537a01e35e0e5b7ff
                 mobility = (100 * maxPlayerMove) / (maxPlayerMove + minPlayerMove);
-            }
-            else if (maxPlayerMove < minPlayerMove)
-            {
+            }else if (maxPlayerMove < minPlayerMove){
                 mobility = -(100 * maxPlayerMove) / (maxPlayerMove + minPlayerMove);
             }
 
-<<<<<<< HEAD
             //Retourne une valeur en fonction des pions posés sur le damier
             whiteCorners = EvaluateMatriceValue(mat_corner_weight, true);
             blackCorners = EvaluateMatriceValue(mat_corner_weight, false);
@@ -133,32 +129,25 @@ namespace OthelloIA_G3
 
             //Retourne ces dernières valeurs avec des coéfficients selon leur importance
             return 2*coinParity + 5*mobility + 10 *corners + 15 * stability;
-=======
-            corners = GetCornerValue(mat_eval);
-
-            return 2 * coinParity + 5 * mobility + 10 * corners;
->>>>>>> b025851f00df6d53333721f537a01e35e0e5b7ff
         }
 
+        /// <summary>
+        /// Calcul le poids des cases de la matrice passée en argument
+        /// en fonction de la présence d'un pion noir ou blanc. 
+        /// Le paramètre white permet de définir ce paramètre
+        /// </summary>
+        /// <returns>The matrice value.</returns>
+        /// <param name="mat_eval">Mat eval.</param>
+        /// <param name="white">If set to <c>true</c> white.</param>
         private int EvaluateMatriceValue(int[,] mat_eval, bool white)
         {
             int typeCoin = white ? 0 : 1;
             int value = 0;
 
-<<<<<<< HEAD
             for (int c = 0; c < 8; c++){
                 for (int l = 0; l < 8; l++){
                     if (board.GetBoard()[c,l] == typeCoin){
-                        value += board.GetBoard()[c, l];
-=======
-            for (int c = 0; c < 8; c++)
-            {
-                for (int l = 0; l < 8; l++)
-                {
-                    if (board.GetBoard()[c, l] == typeCoin)
-                    {
-                        cornerValue += board.GetBoard()[c, l];
->>>>>>> b025851f00df6d53333721f537a01e35e0e5b7ff
+                        value += mat_eval[c, l];
                     }
                 }
             }
