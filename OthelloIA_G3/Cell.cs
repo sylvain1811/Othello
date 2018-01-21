@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace OthelloIA_G3
 {
+    /// <summary>
+    /// Représente une case du plateau avec ses coordonnées
+    /// </summary>
     public class Cell
     {
         public int C { get; set; }
@@ -15,6 +18,11 @@ namespace OthelloIA_G3
         {
             C = c;
             L = l;
+        }
+
+        public Tuple<int, int> ToTuple()
+        {
+            return Tuple.Create(C, L);
         }
     }
 }

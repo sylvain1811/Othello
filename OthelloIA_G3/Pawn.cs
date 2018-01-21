@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace OthelloIA_G3
 {
+    /// <summary>
+    /// Représente un pion avec ses coordonnées dans le plateau et sa couleur.
+    /// </summary>
     public class Pawn : Cell
     {
         public int Color { get; set; }
@@ -13,12 +16,6 @@ namespace OthelloIA_G3
         public Pawn(int c, int l, int color) : base(c, l)
         {
             Color = color;
-        }
-
-        public int Flip()
-        {
-            C = C == 0 ? 1 : 0;
-            return C;
         }
     }
 }
