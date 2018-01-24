@@ -74,11 +74,11 @@ namespace OthelloIA_G3
             minPlayerCoin = isWhite ? board.GetBlackScore() : board.GetWhiteScore();
 
             //Retourne une valeur entre -100 et 100 du rapport du nombre de pion à maximiser sur le total des deux joueurs
-            if (maxPlayerCoin > minPlayerCoin)
+            if (maxPlayerCoin > minPlayerCoin && (maxPlayerCoin + minPlayerCoin) != 0)
             {
                 coinParity = (100 * maxPlayerCoin) / (maxPlayerCoin + minPlayerCoin);
             }
-            else if (maxPlayerCoin < minPlayerCoin)
+            else if (maxPlayerCoin < minPlayerCoin && (maxPlayerCoin + minPlayerCoin) != 0)
             {
                 coinParity = -(100 * minPlayerCoin) / (maxPlayerCoin + minPlayerCoin);
             }
@@ -92,11 +92,11 @@ namespace OthelloIA_G3
             minPlayerMove = isWhite ? nbrOfPlayableMoveBlack : nbrOfPlayableMoveWhite;
 
             //Retourne une valeur entre -100 et 100 du rapport du nombre de coups à maximiser sur le total des deux joueurs
-            if (maxPlayerMove > minPlayerMove)
+            if (maxPlayerMove > minPlayerMove && (maxPlayerMove + minPlayerMove) != 0)
             {
                 mobility = (100 * maxPlayerMove) / (maxPlayerMove + minPlayerMove);
             }
-            else if (maxPlayerMove < minPlayerMove)
+            else if (maxPlayerMove < minPlayerMove && (maxPlayerMove + minPlayerMove) != 0)
             {
                 mobility = -(100 * minPlayerMove) / (maxPlayerMove + minPlayerMove);
             }
@@ -110,11 +110,12 @@ namespace OthelloIA_G3
             minCorners = isWhite ? blackCorners : whiteCorners;
 
             //Retourne une valeur entre -100 et 100 du rapport du poids des cases à maximiser sur le total des deux joueurs
-            if (maxCorners > minCorners)
+
+            if (maxCorners > minCorners && (maxCorners + minCorners) != 0)
             {
                 corners = (100 * maxCorners) / (maxCorners + minCorners);
             }
-            else if (maxCorners < minCorners)
+            else if (maxCorners < minCorners && (maxCorners + minCorners) != 0)
             {
                 corners = -(100 * minCorners) / (maxCorners + minCorners);
             }
@@ -128,11 +129,11 @@ namespace OthelloIA_G3
             minStability = isWhite ? blackStability : whiteStability;
 
             //Retourne une valeur entre -100 et 100 du rapport de stabilité à maximiser sur le total des deux joueurs
-            if (maxStability > minStability)
+            if (maxStability > minStability && (maxStability + minStability) != 0)
             {
                 stability = (100 * maxStability) / (maxStability + minStability);
             }
-            else if (maxStability < minStability)
+            else if (maxStability < minStability && (maxStability + minStability) != 0)
             {
                 stability = -(100 * minStability) / (maxStability + minStability);
             }
@@ -164,7 +165,6 @@ namespace OthelloIA_G3
                     }
                 }
             }
-
             return value;
         }
 

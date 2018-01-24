@@ -121,11 +121,11 @@ namespace OthelloIA_G3
             TreeNode root = new TreeNode(this, TreeNode.EType.MAX, whiteTurn);
 
             var bestOp = AlphaBeta(root, level, whiteTurn, (int)TreeNode.EType.MAX, -int.MaxValue).Item2;
+            //Console.WriteLine($"{bestOp.C}, {bestOp.L}");
 
             if (bestOp == null)
             {
                 bestOp = new Cell(-1, -1);
-
             }
             return bestOp.ToTuple();
         }
