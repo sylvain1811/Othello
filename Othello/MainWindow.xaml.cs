@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -21,10 +23,12 @@ namespace Othello
         Board board;
         CellButton[,] cells;
         bool whiteTurn = false;
+        bool playAgainstIA;
+
         public MainWindow()
         {
             InitializeComponent();
-            StartGame();
+            StartGame(false);
         }
 
         /// <summary>
@@ -35,20 +39,36 @@ namespace Othello
         private void Pawn_Click(object sender, RoutedEventArgs e)
         {
             contextPlayers.Timer.Stop();
-            CellButton pawn = (CellButton)sender;
-            int c = pawn.C;
-            int l = pawn.L;
+            CellButton cellButton = (CellButton)sender;
+            int c = cellButton.C;
+            int l = cellButton.L;
+
 
             if (board.PlayMove(c, l, whiteTurn))
             {
                 // Coup jouable et joué
-                pawn.Val = board.GetBoard()[c, l];
+                cellButton.Val = board.GetBoard()[c, l];
                 whiteTurn = !whiteTurn;
+
+                CheckFinished();
+
+                if (playAgainstIA)
+                {
+                    PlayIaMove();
+                    /*Thread thread = new Thread(PlayIaMove);
+                    thread.Start();*/
+                    CheckFinished();
+                }
             }
             else
             {
                 // Impossible de jouer ce coup
             }
+
+        }
+
+        private void CheckFinished()
+        {
             if (board.IsFinished())
             {
                 // Partie terminée
@@ -68,7 +88,7 @@ namespace Othello
                 var m = MessageBox.Show($"Score joueur noir : {board.GetBlackScore()}\nScore joueur blanc : {board.GetWhiteScore()}\n{winner}\n\nSouhaitez-vous relancer une partie ?", "Partie terminée !", MessageBoxButton.YesNo);
                 if (m == MessageBoxResult.Yes)
                     // Recommence une partie
-                    StartGame();
+                    StartGame(playAgainstIA);
                 else
                     // Ferme l'application
                     Close();
@@ -137,13 +157,15 @@ namespace Othello
                     cells[c, l].Val = tabBoard[c, l];
                 }
             }
+            Console.WriteLine("BoardUpdated");
             return shouldPass;
+
         }
 
         /// <summary>
         /// Commence ou recommence une partie.
         /// </summary>
-        private void StartGame()
+        private void StartGame(bool againstIA)
         {
             // Le joueur noir commence toujours
             whiteTurn = false;
@@ -267,7 +289,7 @@ namespace Othello
         /// </summary>
         private void MenuItemNewGame_Click(object sender, RoutedEventArgs e)
         {
-            StartGame();
+            StartGame(false);
         }
 
         /// <summary>
@@ -337,7 +359,7 @@ namespace Othello
                     {
                         // Recréaction d'un objet game à partir du fichier de sauvegarde
                         Game game = (Game)formatter.Deserialize(stream);
-                        
+
                         // Charger les données de game dans la partie actuelle
                         board = new Board(game.Board);
                         whiteTurn = game.WhiteTurn;
@@ -359,6 +381,42 @@ namespace Othello
                     }
                 }
             }
+        }
+
+        private void MenuItemPlayAgainstIA_Click(object sender, RoutedEventArgs e)
+        {
+            playAgainstIA = true;
+            StartGame(playAgainstIA);
+        }
+
+        private void PlayIaMove()
+        {
+            Thread.Sleep(3000);
+            int difficulty = 5;
+
+            // Le joueur humain est bloqué
+            foreach (var cell in cells)
+                cell.IsEnabled = false;
+
+            var move = board.GetNextMove(board.GetBoard(), difficulty, whiteTurn);
+            int c = move.Item1;
+            int l = move.Item2;
+
+            if (board.PlayMove(c, l, whiteTurn))
+            {
+                // Coup jouable et joué
+                whiteTurn = !whiteTurn;
+            }
+            else
+            {
+                // Impossible de jouer ce coup
+            }
+
+            CheckFinished();
+
+            // Débloque le joueur humain
+            foreach (var cell in cells)
+                cell.IsEnabled = true;
         }
     }
 }

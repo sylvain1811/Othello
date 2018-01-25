@@ -58,7 +58,7 @@ namespace OthelloIA_G3
             //Initialiation de la matrice de stabilité
             //La stabilité est définie en fonction du fait qu'un pion pourra être
             //retourné dans le tour même, dans un des tours à venir ou qu'il soit
-            //impossible à être retourné. 
+            //impossible à être retourné.
             int[,] mat_stability_weight = new int[,] { {4, -3, 2, 2, 2, 2, -3, 4},
                                                      {-3, -4, -1, -1, -1, -1, -4, -3},
                                                      {2, -1, 1, 0, 0, 1, -1, 2},

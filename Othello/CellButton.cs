@@ -89,7 +89,7 @@ namespace Othello
         protected override void OnMouseEnter(MouseEventArgs e)
         {
             base.OnMouseEnter(e);
-            if (Val < 0)
+            if (Val < 0 && IsEnabled)
             {
                 if (IsPlayable >= 0)
                     Ellipse.Fill = fillBrushesDict[IsPlayable + 2]; // couleur du joueur avec transparence

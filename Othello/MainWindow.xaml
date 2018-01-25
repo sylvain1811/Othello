@@ -36,7 +36,8 @@
                 <MenuItem Header="_Partie">
                     <MenuItem IsEnabled="True" Header="_Nouvelle partie" Click="MenuItemNewGame_Click"></MenuItem>
                     <MenuItem IsEnabled="True" Header="_Sauver la partie en cours" Click="MenuItemSave_Click"></MenuItem>
-                    <MenuItem IsEnabled="True" Header="Charger une partie" Click="MenuItemLoad_Click"></MenuItem>
+                    <MenuItem Header="Charger une partie" Click="MenuItemLoad_Click"/>
+                    <MenuItem IsEnabled="False" Header="_Jouer contre l'ordinateur" Click="MenuItemPlayAgainstIA_Click"/>
                 </MenuItem>
                 <MenuItem Header="A propos">
                     <MenuItem Header="Règles" Click="MenuItemRules_Click"></MenuItem>
@@ -54,7 +55,8 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="30*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
             </Grid.RowDefinitions>
 
             <Grid Grid.Column="0" Grid.Row="1">
