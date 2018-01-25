@@ -34,10 +34,10 @@
         <DockPanel Background="White">
             <Menu DockPanel.Dock="Top" Background="White">
                 <MenuItem Header="_Partie">
-                    <MenuItem IsEnabled="True" Header="_Nouvelle partie" Click="MenuItemNewGame_Click"></MenuItem>
+                    <MenuItem IsEnabled="True" Header="_Nouvelle partie (JcJ)" Click="MenuItemNewGame_Click"></MenuItem>
                     <MenuItem IsEnabled="True" Header="_Sauver la partie en cours" Click="MenuItemSave_Click"></MenuItem>
                     <MenuItem Header="Charger une partie" Click="MenuItemLoad_Click"/>
-                    <MenuItem IsEnabled="False" Header="_Jouer contre l'ordinateur" Click="MenuItemPlayAgainstIA_Click"/>
+                    <MenuItem IsEnabled="True" Header="_Jouer contre l'ordinateur" Click="MenuItemPlayAgainstIA_Click"/>
                 </MenuItem>
                 <MenuItem Header="A propos">
                     <MenuItem Header="Règles" Click="MenuItemRules_Click"></MenuItem>

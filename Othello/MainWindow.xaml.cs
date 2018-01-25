@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
@@ -28,7 +29,7 @@ namespace Othello
         public MainWindow()
         {
             InitializeComponent();
-            StartGame(false);
+            StartGame();
         }
 
         /// <summary>
@@ -49,14 +50,14 @@ namespace Othello
                 // Coup jouable et joué
                 cellButton.Val = board.GetBoard()[c, l];
                 whiteTurn = !whiteTurn;
+                var newWhiteTurn = whiteTurn;
 
                 CheckFinished();
 
-                if (playAgainstIA)
+                // L'IA joue que si elle n'a pas passé son tour (donc whiteTurn n'a pas été modifié dans CheckFinished().)
+                if (playAgainstIA && newWhiteTurn == whiteTurn)
                 {
-                    PlayIaMove();
-                    /*Thread thread = new Thread(PlayIaMove);
-                    thread.Start();*/
+                    PlayIAMove();
                     CheckFinished();
                 }
             }
@@ -64,9 +65,11 @@ namespace Othello
             {
                 // Impossible de jouer ce coup
             }
-
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void CheckFinished()
         {
             if (board.IsFinished())
@@ -88,7 +91,7 @@ namespace Othello
                 var m = MessageBox.Show($"Score joueur noir : {board.GetBlackScore()}\nScore joueur blanc : {board.GetWhiteScore()}\n{winner}\n\nSouhaitez-vous relancer une partie ?", "Partie terminée !", MessageBoxButton.YesNo);
                 if (m == MessageBoxResult.Yes)
                     // Recommence une partie
-                    StartGame(playAgainstIA);
+                    StartGame();
                 else
                     // Ferme l'application
                     Close();
@@ -127,6 +130,8 @@ namespace Othello
             // Affichage du tour (avec indication si un joueur a passé)
             var whosPlaying = whiteTurn ? BLANC : NOIR;
             turn.Text = $"Tour du joueur {whosPlaying}{whoPass}";
+            if (playAgainstIA && whiteTurn)
+                turn.Text += $" (Ordinateur)";
 
             // Binding
             contextPlayers.BlackScore = $"{board.GetBlackScore()}";
@@ -157,16 +162,16 @@ namespace Othello
                     cells[c, l].Val = tabBoard[c, l];
                 }
             }
-            Console.WriteLine("BoardUpdated");
             return shouldPass;
-
         }
 
         /// <summary>
         /// Commence ou recommence une partie.
         /// </summary>
-        private void StartGame(bool againstIA)
+        private void StartGame()
         {
+            UpdateTitle();
+
             // Le joueur noir commence toujours
             whiteTurn = false;
             // Création du contexte pour les infos des joueurs
@@ -233,6 +238,18 @@ namespace Othello
             UpdateUI(false);
 
         }
+
+        /// <summary>
+        /// Met à jour le titre de la fenêtre.
+        /// </summary>
+        private void UpdateTitle()
+        {
+            if (playAgainstIA)
+                Title = "Othello - Partie contre l'ordinateur";
+            else
+                Title = "Othello - Partie joueur contre joueur";
+        }
+
         /// <summary>
         /// Ajout des en-têtes au plateau (A-H dans les colonnes, 1-8 pour les lignes).
         /// </summary>
@@ -277,6 +294,14 @@ namespace Othello
         }
 
         /// <summary>
+        /// Ouvre le navigateur par défaut avec les règles du jeu.
+        /// </summary>
+        private void MenuItemRules_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://www.ffothello.org/othello/regles-du-jeu/");
+        }
+
+        /// <summary>
         /// Affiche un message "About" de l'application avec auteurs, etc.
         /// </summary>
         private void MenuItemAbout_Click(object sender, RoutedEventArgs e)
@@ -289,15 +314,8 @@ namespace Othello
         /// </summary>
         private void MenuItemNewGame_Click(object sender, RoutedEventArgs e)
         {
-            StartGame(false);
-        }
-
-        /// <summary>
-        /// Ouvre le navigateur par défaut avec les règles du jeu.
-        /// </summary>
-        private void MenuItemRules_Click(object sender, RoutedEventArgs e)
-        {
-            System.Diagnostics.Process.Start("http://www.ffothello.org/othello/regles-du-jeu/");
+            playAgainstIA = false;
+            StartGame();
         }
 
         /// <summary>
@@ -316,7 +334,7 @@ namespace Othello
             if (saveFileDialog.ShowDialog() == true)
             {
                 // L'objet game est sérializable. Il contient le plateau de jeu (int[8,8]) et les temps de réfléxion des joueurs.
-                Game game = new Game(board.GetBoard(), whiteTurn, contextPlayers.ElapsedWhite, contextPlayers.ElapsedBlack);
+                Game game = new Game(board.GetBoard(), whiteTurn, contextPlayers.ElapsedWhite, contextPlayers.ElapsedBlack, playAgainstIA);
                 BinaryFormatter formatter = new BinaryFormatter();
                 Stream stream = null;
 
@@ -363,9 +381,11 @@ namespace Othello
                         // Charger les données de game dans la partie actuelle
                         board = new Board(game.Board);
                         whiteTurn = game.WhiteTurn;
-                        UpdateUI(false);
+                        playAgainstIA = game.PlayAgainstIA;
                         contextPlayers.ElapsedBlack = game.ElapsedBlack;
                         contextPlayers.ElapsedWhite = game.ElapsedWhite;
+                        UpdateUI(false);
+                        UpdateTitle();
                     }
                     catch
                     {
@@ -383,40 +403,82 @@ namespace Othello
             }
         }
 
+        /// <summary>
+        /// Démarre une partie contre l'IA. l'IA joue les blancs.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MenuItemPlayAgainstIA_Click(object sender, RoutedEventArgs e)
         {
             playAgainstIA = true;
-            StartGame(playAgainstIA);
+            UpdateTitle();
+            StartGame();
         }
 
-        private void PlayIaMove()
+        /// <summary>
+        /// Demande à l'IA de jouer un coup.
+        /// Méthode asynchrone pour permettre l'affichage du coup du joueur avant que l'IA joue.
+        /// </summary>
+        private void PlayIAMove()
         {
-            Thread.Sleep(3000);
-            int difficulty = 5;
+            int difficulty = 2;
 
             // Le joueur humain est bloqué
             foreach (var cell in cells)
                 cell.IsEnabled = false;
 
-            var move = board.GetNextMove(board.GetBoard(), difficulty, whiteTurn);
-            int c = move.Item1;
-            int l = move.Item2;
+            // Copie des variables utilisées dans un BackgroundWorker pour éviter la concurrence
+            Board copyBoard = new Board(board);
+            bool copyWhiteTurn = whiteTurn;
+            int copyDifficulty = difficulty;
+            Tuple<int, int> move = null;
 
-            if (board.PlayMove(c, l, whiteTurn))
+            BackgroundWorker bgWorker = new BackgroundWorker();
+
+            // On fait réfléchir l'IA dans un BackgroudWorker
+            bgWorker.DoWork += (sender, ev) =>
             {
-                // Coup jouable et joué
-                whiteTurn = !whiteTurn;
-            }
-            else
+                Thread.Sleep(1000);
+                move = copyBoard.GetNextMove(copyBoard.GetBoard(), copyDifficulty, copyWhiteTurn);
+            };
+
+            // Quand elle trouve un coup, on met à jour le board
+            bgWorker.RunWorkerCompleted += (sender, ev) =>
             {
-                // Impossible de jouer ce coup
-            }
+                int c = move.Item1;
+                int l = move.Item2;
 
-            CheckFinished();
+                // Vérifie que l'IA n'a pas passé son tour
+                if (c >= 0 && l >= 0)
+                {
+                    if (board.PlayMove(c, l, whiteTurn))
+                    {
+                        // Coup jouable et joué
+                        whiteTurn = !whiteTurn;
+                    }
+                    else
+                    {
+                        // Impossible de jouer ce coup
+                    }
+                }
 
-            // Débloque le joueur humain
-            foreach (var cell in cells)
-                cell.IsEnabled = true;
+                var newWhiteTurn = whiteTurn;
+
+                CheckFinished();
+
+                if (newWhiteTurn != whiteTurn)
+                {
+                    // Le joueur a passé son tour (whiteTurn a été modifié dans CheckFinished())
+                    PlayIAMove();
+                }
+
+                // Débloque le joueur humain
+                foreach (var cell in cells)
+                    cell.IsEnabled = true;
+            };
+
+            // On lance le background worker
+            bgWorker.RunWorkerAsync();
         }
     }
 }

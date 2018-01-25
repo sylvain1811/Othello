@@ -14,13 +14,15 @@ namespace Othello
         public int ElapsedBlack { get; set; }
         public int[,] Board { get; set; }
         public bool WhiteTurn { get; set; }
+        public bool PlayAgainstIA { get; set; }
 
-        public Game(int[,] board, bool whiteTurn, int elapsedWhite, int elapsedBlack)
+        public Game(int[,] board, bool whiteTurn, int elapsedWhite, int elapsedBlack, bool playAgainstIa)
         {
             Board = board;
             WhiteTurn = whiteTurn;
             ElapsedBlack = elapsedBlack;
             ElapsedWhite = elapsedWhite;
+            PlayAgainstIA = playAgainstIa;
         }
     }
 }
